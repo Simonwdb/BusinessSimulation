@@ -133,8 +133,9 @@ public class TemplateAssignment1 {
 			// implement the pseudo-code algorithm here. Your code should be able to return both normalized and regular numbers based on the value of normalize.
 			
 			// method to calculate as i think was explained
-			double z0 = this.lastOutput;
-			this.lastOutput = (this.a * z0 + this.c) % this.m;
+//			double z0 = this.lastOutput;
+			double result = (this.a * this.lastOutput + this.c) % this.m;
+			
 			
 			// 'wrong' method to calculate the generateNext
 			/*
@@ -146,7 +147,14 @@ public class TemplateAssignment1 {
 			
 			// both calculations above give the same results
 			
-			return normalize ? (this.lastOutput + 1) / (this.m + 1) : this.lastOutput; 
+			if (normalize) {
+				this.lastOutput = (result + 1) / (this.m + 1);
+			} else {
+				this.lastOutput = result;
+				
+			}
+			
+			return this.lastOutput;
 		}
 
 		public void setSeed(double newSeed) {
