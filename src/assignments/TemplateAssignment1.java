@@ -131,6 +131,8 @@ public class TemplateAssignment1 {
 
 		public double generateNext(boolean normalize){
 			// implement the pseudo-code algorithm here. Your code should be able to return both normalized and regular numbers based on the value of normalize.
+			
+			// method to calculate as i think was explained
 			/*
 			double z0 = this.lastOutput;
 			System.out.println("Z0 is: " + z0);
@@ -144,12 +146,7 @@ public class TemplateAssignment1 {
 			this.seed = z1;
 			this.lastOutput = z1;
 			
-			
-			if (normalize) {
-				return (this.seed + 1) / (this.m + 1);
-			} else {
-				return this.lastOutput;
-			}
+			return normalize ? (this.lastOutput + 1) / (this.m + 1) : this.lastOutput; 
 		}
 
 		public void setSeed(double newSeed) {
