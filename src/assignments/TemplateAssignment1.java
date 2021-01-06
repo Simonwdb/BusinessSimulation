@@ -58,7 +58,7 @@ public class TemplateAssignment1 {
 	public Tally Question3() {
 		Tally durations = new Tally();
 		// Simulate the matches and add the duration to the Tally.
-		int nrOfSimulations = 100;
+		int nrOfSimulations = 5000;
 		for (int i = 0; i < nrOfSimulations; i++) {
 			durations.add(simulateMatch(raceTo));
 		}
@@ -102,6 +102,7 @@ public class TemplateAssignment1 {
 		//import csv file, sort the values and compute empirical distribution
 		try {
 			FileReader file = new FileReader(csvFile);
+			//file is already sorted in Excel
 			durationDist = new EmpiricalDist(file);
 		} catch (IOException e) {
 			e.printStackTrace();
