@@ -77,8 +77,6 @@ public class TemplateAssignment1 {
 
 	public double simulateMatch(int raceTo) {
 		//simulate match and duration of match
-		prng = new LCG(seed, a, c, m);
-		
 		int gamesToWin = (raceTo / 2) + 1; // minimum of 5 games needed to win 
 		
 		double matchDuration = 0;
@@ -135,6 +133,7 @@ public class TemplateAssignment1 {
 			// method to calculate as i think was explained
 //			double z0 = this.lastOutput;
 			double result = (this.a * this.lastOutput + this.c) % this.m;
+			this.lastOutput = result;
 			
 			
 			// 'wrong' method to calculate the generateNext
@@ -147,14 +146,9 @@ public class TemplateAssignment1 {
 			
 			// both calculations above give the same results
 			
-			if (normalize) {
-				this.lastOutput = (result + 1) / (this.m + 1);
-			} else {
-				this.lastOutput = result;
-				
-			}
 			
-			return this.lastOutput;
+			return normalize ? (result + 1) / (this.m + 1) : result;
+			
 		}
 
 		public void setSeed(double newSeed) {
