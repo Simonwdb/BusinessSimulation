@@ -17,11 +17,11 @@ public class TemplateAssignment1 {
 	
 	// LCG parameters (notation from slides used)
 	double seed = 0;
-	double m = 2^20;
+	double m = 1048576;	//2^20
 	double a = 233;
 	double c = 65431;
 
-	int raceTo = 9; // number of games to win the game
+	int raceTo = 5; // number of games to win the game
 	double winThreshold = 0.5; // winning probability of a player
 
 	LCG prng;
@@ -77,14 +77,12 @@ public class TemplateAssignment1 {
 
 	public double simulateMatch(int raceTo) {
 		//simulate match and duration of match
-		int gamesToWin = (raceTo / 2) + 1; // minimum of 5 games needed to win 
-		
 		double matchDuration = 0;
 		
 		double player1 = 0;
 		double player2 = 0;
 		
-		while (player1 < gamesToWin || player2 < gamesToWin) {
+		while (player1 < raceTo && player2 < raceTo) {
 			double winChance = prng.generateNext(true);
 			matchDuration += durationDist.inverseF(winChance);
 			if (winChance < winThreshold) {
@@ -129,23 +127,8 @@ public class TemplateAssignment1 {
 
 		public double generateNext(boolean normalize){
 			// implement the pseudo-code algorithm here. Your code should be able to return both normalized and regular numbers based on the value of normalize.
-			
-			// method to calculate as i think was explained
-//			double z0 = this.lastOutput;
 			double result = (this.a * this.lastOutput + this.c) % this.m;
 			this.lastOutput = result;
-			
-			
-			// 'wrong' method to calculate the generateNext
-			/*
-			double z0 = this.lastOutput;
-			double z1 = (this.a * z0 + this.c) % this.m;
-			this.seed = z1;
-			this.lastOutput = z1;
-			*/
-			
-			// both calculations above give the same results
-			
 			
 			return normalize ? (result + 1) / (this.m + 1) : result;
 			
