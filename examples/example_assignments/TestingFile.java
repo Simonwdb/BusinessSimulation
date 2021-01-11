@@ -18,6 +18,16 @@ public class TestingFile {
 		System.out.println(check);
 	}
 	
+	/*
+	 * 
+	 *     	for (int i = 0; i < this.numServers; i++) {
+    		if (serverList[i].queue.size() < this.openLimit) {
+    			return false;
+    		}
+    	}
+	 * 
+	 */
+	
 	public static void main(String[] args) {
 		
 		new TestingFile().start();

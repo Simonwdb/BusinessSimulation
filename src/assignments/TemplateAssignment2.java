@@ -207,12 +207,22 @@ public class TemplateAssignment2 {
     
     int Question1() {
     	// write a method that returns the index of an open server with the shortest queue
+    	int index = 100;	// just to be sure that every starting iteration the index gets the value of the first queue size
+    	for (int i = 0; i < this.numServers; i++) {
+    		if (this.serverList[i].openServer) {
+    			if (this.serverList[i].queue.size() < index) {
+    				index = this.serverList[i].queue.size();
+    			}
+    		}
+    	}
+    	// what if all the servers are closed? Could that be a scenario? If so, this will return a index of 100 (which seems to be wrong)
+    	return index;
     }
     
     boolean Question2() {
     	// write a method that returns true if a new server should be opened
     	for (int i = 0; i < this.numServers; i++) {
-    		if (serverList[i].queue.size() < this.openLimit) {
+    		if (this.serverList[i].queue.size() < this.openLimit) {
     			return false;
     		}
     	}
@@ -221,6 +231,20 @@ public class TemplateAssignment2 {
     
     void Question3() {
         // write a method that closes all servers that can be closed
+    	int closedServers = 0;
+    	
+    	// currently closing all servers if there are idle
+    	for (int i = 0; i < this.numServers; i++) {
+    		if (this.serverList[i].IDLE == Server.IDLE) {
+    			this.serverList[i].closeServer();
+    			closedServers ++;
+    		}
+    	}
+    	
+    	// if all servers are closed, at least one server needs to be opened
+    	if (closedServers == this.numServers) {
+    		this.serverList[0].openServer();
+    	}
     }
 
     void handleArrival() {
@@ -249,8 +273,8 @@ public class TemplateAssignment2 {
 		// test 2 (unbalanced system)
         lambda = 3; // arrival rate
         mu = 0.01; // service rate
-        TemplateAssignment2 grocery = new TemplateAssignment2(numServers, lambda, mu, stopTime, openLimit);
-        ListOfStatProbes[] output = grocery.simulateOneRun();
+        TemplateAssignment2 grocery2 = new TemplateAssignment2(numServers, lambda, mu, stopTime, openLimit);
+        ListOfStatProbes[] output2 = grocery.simulateOneRun();
 		System.out.println(output[0].report());
 		System.out.println(output[1].report());
     }
