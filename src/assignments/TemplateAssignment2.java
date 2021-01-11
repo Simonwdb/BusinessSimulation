@@ -207,15 +207,20 @@ public class TemplateAssignment2 {
     
     int Question1() {
     	// write a method that returns the index of an open server with the shortest queue
-    	int index = 100;	// just to be sure that every starting iteration the index gets the value of the first queue size
+    	int index = 0;
+    	// int minimum = this.serverList[index].queue.size(); is this possible, because you don't know up front if serverList[0] is an open server
+    	// and if the server at index [0] is a closed one, you assign a 0 to minimum and therefore the for-loop won't work properly (if you have e.g. 2 open servers with a minimum of 2 and 1) 
+    	int minimum = 100;	// with this you always get the first open server as a minimum
+    	
     	for (int i = 0; i < this.numServers; i++) {
     		if (this.serverList[i].openServer) {
-    			if (this.serverList[i].queue.size() < index) {
-    				index = this.serverList[i].queue.size();
-    			}
+        		if (this.serverList[i].queue.size() <= minimum) {
+        			minimum = this.serverList[i].queue.size();
+        			index = i;
+        		}
     		}
     	}
-    	// what if all the servers are closed? Could that be a scenario? If so, this will return a index of 100 (which seems to be wrong)
+
     	return index;
     }
     
@@ -249,10 +254,39 @@ public class TemplateAssignment2 {
 
     void handleArrival() {
        // write a method that handles the arrival of a customer to the store
+    	
+    	// check for opening a server when the new customer arrives
+    	if (Question2()) {
+    		// open a new server
+    		for (int i = 0; i < this.numServers; i++) {
+    			if (! this.serverList[i].openServer) {
+    				this.serverList[i].openServer();
+    				break;
+    			}
+    		}
+    	}
+    	
+    	// customer chooses the least crowded server for its service
+    	Customer cust = new Customer();
+    	int serverIndex = Question1();
+    	cust.chooseServer(serverIndex);
+    	this.serverList[serverIndex].queue.add(cust);
     }
 
     void serviceCompleted(Server server, Customer cust) {
         // write a method that completes the service of the customer, update the Tallies and starts the service of a new customer if needed
+    	/*
+    	cust.completed();
+    	waitTimeTally.add(cust.waitTime);
+    	serviceTimeTally.add(cust.serviceTime);
+    	
+    	
+    	if (server.currentCust == null) {
+    		server.startService(cust);
+    	} else {
+    		server.queue.add(cust);
+    	}
+    	*/
     }
     
     public static void main(String[] args) {
@@ -274,8 +308,8 @@ public class TemplateAssignment2 {
         lambda = 3; // arrival rate
         mu = 0.01; // service rate
         TemplateAssignment2 grocery2 = new TemplateAssignment2(numServers, lambda, mu, stopTime, openLimit);
-        ListOfStatProbes[] output2 = grocery.simulateOneRun();
-		System.out.println(output[0].report());
-		System.out.println(output[1].report());
+        ListOfStatProbes[] output2 = grocery2.simulateOneRun();
+		System.out.println(output2[0].report());
+		System.out.println(output2[1].report());
     }
 }

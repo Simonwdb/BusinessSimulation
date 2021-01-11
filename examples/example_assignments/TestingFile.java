@@ -2,31 +2,46 @@ package example_assignments;
 
 public class TestingFile {
 
-	int[] test = {8, 4, 6, 7, 9};
+	int[] test = {2, 4, 1, 0, 5};
 
-	boolean check() {
+	int check() {
+		int index = 0;
+		int lowest = 0;
 		for (int i = 0; i < 5; i++) {
 			if (this.test[i] > 10) {
-				return true;
+				return 0;
 			}
 		}
-		return false;
-	}
-	
-	void start() {
-		boolean check = check();
-		System.out.println(check);
+		
+		return index;
 	}
 	
 	/*
 	 * 
-	 *     	for (int i = 0; i < this.numServers; i++) {
-    		if (serverList[i].queue.size() < this.openLimit) {
-    			return false;
-    		}
-    	}
-	 * 
+		    // add this
+		    if (array.length == 0)
+		        return -1;
+		
+		    int index = 0;
+		    int min = array[index];
+		
+		    for (int i = 1; i < array.length; i++){
+		        if (array[i] <= min){
+		        min = array[i];
+		        index = i;
+		        }
+		    }
+		    return index;
+		}
 	 */
+	
+	
+	
+	void start() {
+		int check = check();
+		System.out.println(check);
+	}
+
 	
 	public static void main(String[] args) {
 		
