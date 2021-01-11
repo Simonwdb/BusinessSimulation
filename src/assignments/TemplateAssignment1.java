@@ -51,7 +51,7 @@ public class TemplateAssignment1 {
 
 	public void plotEmpiricalCDF() {
 		// Use EmpiricalChart to plot the CDF
-		EmpiricalChart chart = new EmpiricalChart("Title", "Xlabel", "Ylabel", durationDist.getParams());
+		EmpiricalChart chart = new EmpiricalChart("The ECDF of the game length", "x values of a game length", "ECDF value F(x)", durationDist.getParams());
 		chart.view(1000, 500);
 	}
 
@@ -79,8 +79,8 @@ public class TemplateAssignment1 {
 		//simulate match and duration of match
 		double matchDuration = 0;
 		
-		double player1 = 0;
-		double player2 = 0;
+		int player1 = 0;
+		int player2 = 0;
 		
 		while (player1 < raceTo && player2 < raceTo) {
 			double winChance = prng.generateNext(true);

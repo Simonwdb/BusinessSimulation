@@ -6,15 +6,24 @@
     </profile>
     <version value="1.0" />
   </component>
-  <component name="ProjectCodeStyleConfiguration">
-    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Default" />
-  </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SBR486.iml" filepath="$PROJECT_DIR$/SBR486.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sbr486.iml" filepath="$PROJECT_DIR$/sbr486.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="ssj">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://$USER_HOME$/Downloads/ssj-3.3.1/doc/examples" />
+      </SOURCES>
+    </library>
   </component>
 </project>
