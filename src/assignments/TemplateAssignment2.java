@@ -211,6 +211,11 @@ public class TemplateAssignment2 {
     
     boolean Question2() {
     	// write a method that returns true if a new server should be opened
+    	for (int i = 0; i < this.numServers; i++) {
+    		if (serverList[i].queue.size() < this.openLimit) {
+    			return false;
+    		}
+    	}
     	return true;
     }
     
