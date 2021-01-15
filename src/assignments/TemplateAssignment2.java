@@ -207,10 +207,10 @@ public class TemplateAssignment2 {
     
     int Question1() {
     	// write a method that returns the index of an open server with the shortest queue
+    	// if there are 2 servers with no queue, but one server is busy and the other is idle, then you need to assignment the index to the server that is idle
+    	
     	int index = 0;
-    	// int minimum = this.serverList[index].queue.size(); is this possible, because you don't know up front if serverList[0] is an open server
-    	// and if the server at index [0] is a closed one, you assign a 0 to minimum and therefore the for-loop won't work properly (if you have e.g. 2 open servers with a minimum of 2 and 1) 
-    	int minimum = 100;	// with this you always get the first open server as a minimum
+    	int minimum = 100;	// in this way you always get the first open server as a minimum
     	
     	for (int i = 0; i < this.numServers; i++) {
     		if (this.serverList[i].openServer) {
@@ -226,21 +226,60 @@ public class TemplateAssignment2 {
     
     boolean Question2() {
     	// write a method that returns true if a new server should be opened
+    	
+    	int openServers = 0;
+    	
     	for (int i = 0; i < this.numServers; i++) {
-    		if (this.serverList[i].queue.size() < this.openLimit) {
-    			return false;
+    		if (this.serverList[i].openServer) {
+    			openServers ++;
+        		if (this.serverList[i].queue.size() < this.openLimit) {
+        			return false;
+        		}
     		}
     	}
-    	return true;
+    	
+    	return (openServers == this.numServers) ? false : true;
     }
     
     void Question3() {
         // write a method that closes all servers that can be closed
+    	
+    	// uitleg:
+    	/*
+    	 * - 3 servers open, 2/3 busy -> niks sluiten
+    	 * - 2 servers open, 1/2 busy -> 1 server sluiten
+    	 */
+    	
+    	
+    	
+    	
+    	// second method
+    	/*
+    	int openServer = 0;
+    	int minimumOpenServers = 1;	// i know this can be a final static integer, but don't know where to place that (right now)
+    	
+    	for (int i = 0; i < this.numServers; i++) {
+    		if (this.serverList[i].busyServer) {
+    			openServer ++;
+    		}
+    	}
+    	
+    	if (openServer == minimumOpenServers) {
+    		for (int i = 0; i < this.numServers; i++) {
+    			if (! this.serverList[i].busyServer) {
+    				this.serverList[i].closeServer();
+    			}
+    		}
+    	}
+    	*/
+    	
+    	
+    	// Own method below
     	int closedServers = 0;
     	
     	// currently closing all servers if there are idle
     	for (int i = 0; i < this.numServers; i++) {
-    		if (this.serverList[i].IDLE == Server.IDLE) {
+    		if (! this.serverList[i].busyServer) {
     			this.serverList[i].closeServer();
     			closedServers ++;
     		}
@@ -260,7 +299,7 @@ public class TemplateAssignment2 {
     		// open a new server
     		for (int i = 0; i < this.numServers; i++) {
     			if (! this.serverList[i].openServer) {
-    				this.serverList[i].openServer();
+    				this.serverList[i].openServer();;
     				break;
     			}
     		}
@@ -270,23 +309,27 @@ public class TemplateAssignment2 {
     	Customer cust = new Customer();
     	int serverIndex = Question1();
     	cust.chooseServer(serverIndex);
-    	this.serverList[serverIndex].queue.add(cust);
+    	
+    	if (! this.serverList[serverIndex].busyServer) {
+    		this.serverList[serverIndex].startService(cust);
+    	} else {
+    		this.serverList[serverIndex].queue.addLast(cust);
+    	}
     }
 
     void serviceCompleted(Server server, Customer cust) {
         // write a method that completes the service of the customer, update the Tallies and starts the service of a new customer if needed
-    	/*
+    	
     	cust.completed();
     	waitTimeTally.add(cust.waitTime);
     	serviceTimeTally.add(cust.serviceTime);
     	
-    	
-    	if (server.currentCust == null) {
-    		server.startService(cust);
+    	if (server.queue.isEmpty()) {
+    		Question3();
     	} else {
-    		server.queue.add(cust);
+    		Customer newCust = server.queue.removeFirst();
+    		server.startService(newCust);
     	}
-    	*/
     }
     
     public static void main(String[] args) {
