@@ -113,7 +113,10 @@ public class TemplateAssignment3 {
         long[] seed = new long[6];
 
         //TO DO: Fill the long[] with random seeds, for example, using rng
-
+        for (int i = 0; i < 6; i++) {
+        	seed[i] = rng.nextLong();
+        }
+        
         MRG32k3a myrng = new MRG32k3a();
         myrng.setSeed(seed);
         return myrng;
