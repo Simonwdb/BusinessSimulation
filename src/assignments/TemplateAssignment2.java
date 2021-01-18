@@ -91,7 +91,7 @@ public class TemplateAssignment2 {
 		public Server(Accumulate utilization) {
 			currentCust = null;
 			queue = new LinkedList<>();
-			openServer = false;
+			openServer = true;
 			busyServer = false;
 			this.utilization = utilization;
 			utilization.init(IDLE);
@@ -137,6 +137,7 @@ public class TemplateAssignment2 {
 	double serviceRate;
 	double stopTime;
 	int openLimit;
+	final static int MIN_OPEN_SERVERS = 1;
 
 	// RNGs
 	ArrivalProcess arrivalProcess;
@@ -207,13 +208,18 @@ public class TemplateAssignment2 {
     
     int Question1() {
     	// write a method that returns the index of an open server with the shortest queue
-    	// if there are 2 servers with no queue, but one server is busy and the other is idle, then you need to assignment the index to the server that is idle
     	
     	int index = 0;
     	int minimum = 100;	// in this way you always get the first open server as a minimum
     	
     	for (int i = 0; i < this.numServers; i++) {
     		if (this.serverList[i].openServer) {
+    			// if server is not busy and there is no queue, assign index directly to i
+    			if (! this.serverList[i].busyServer && this.serverList[i].queue.isEmpty()) {
+    				minimum = this.serverList[i].queue.size();
+    				index = i;
+    				break;
+    			}
         		if (this.serverList[i].queue.size() <= minimum) {
         			minimum = this.serverList[i].queue.size();
         			index = i;
@@ -244,19 +250,7 @@ public class TemplateAssignment2 {
     void Question3() {
         // write a method that closes all servers that can be closed
     	
-    	// uitleg:
-    	/*
-    	 * - 3 servers open, 2/3 busy -> niks sluiten
-    	 * - 2 servers open, 1/2 busy -> 1 server sluiten
-    	 */
-    	
-    	
-    	
-    	
-    	// second method
-    	/*
     	int openServer = 0;
-    	int minimumOpenServers = 1;	// i know this can be a final static integer, but don't know where to place that (right now)
     	
     	for (int i = 0; i < this.numServers; i++) {
     		if (this.serverList[i].busyServer) {
@@ -264,30 +258,12 @@ public class TemplateAssignment2 {
     		}
     	}
     	
-    	if (openServer == minimumOpenServers) {
+    	if (openServer == MIN_OPEN_SERVERS) {
     		for (int i = 0; i < this.numServers; i++) {
     			if (! this.serverList[i].busyServer) {
     				this.serverList[i].closeServer();
     			}
     		}
-    	}
-    	*/
-    	
-    	
-    	// Own method below
-    	int closedServers = 0;
-    	
-    	// currently closing all servers if there are idle
-    	for (int i = 0; i < this.numServers; i++) {
-    		if (! this.serverList[i].busyServer) {
-    			this.serverList[i].closeServer();
-    			closedServers ++;
-    		}
-    	}
-    	
-    	// if all servers are closed, at least one server needs to be opened
-    	if (closedServers == this.numServers) {
-    		this.serverList[0].openServer();
     	}
     }
 
