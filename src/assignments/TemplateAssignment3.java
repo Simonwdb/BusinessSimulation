@@ -155,7 +155,7 @@ public class TemplateAssignment3 {
         HashSet<State> I = new HashSet();
 
         // find all candidate solutions for the ranking and selection method
-
+        // kusjes van wouter kager
         return I;
     }
 
