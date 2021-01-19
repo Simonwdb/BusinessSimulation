@@ -179,7 +179,7 @@ public class TemplateAssignment3 {
     }
 
     public State selectRandomStart() {
-        State state;
+        State state = null;
 
         // select a random state
 
@@ -187,8 +187,8 @@ public class TemplateAssignment3 {
     }
 
     public State selectRandomNeighbor(State state) {
-        State neighbor;
-
+        State neighbor = null; // Temporary: nog niet af dus returnt null. TODO: dit vervangen later, ook voor andere methoden.
+        
         // select a random neighbor
 
         return neighbor;
@@ -198,6 +198,9 @@ public class TemplateAssignment3 {
         double[] results = new double[2];
 
         // perform CRN on (k,K) and (k2,K2) as parameters, average costs is result per run
+        // So:  results[0] = average costs per run with CRN & (k,K)
+        // And: results[1] = average costs per run with CRN & (k2, K2)
+        // TODO: We should also print these results somewhere, we can do this in main for example, by assigning the results to a variable and printing this.
 
         return results;
     }
@@ -212,17 +215,17 @@ public class TemplateAssignment3 {
         double muHigh = 4;    			 // average high service time
         double stopTime = 10000;     	 // Simulation endtime (seconds)
 
-        int xmin = ;					 // Lowest possible value for k
-        int xmax = ;					 // Highest possible value for k
-        int ymin = ;					 // Lowest possible value for K	
-        int ymax = ;					 // Highest possible value for K
+        int xmin = 5;					 // Lowest possible value for k
+        int xmax = 10;					 // Highest possible value for k
+        int ymin = 10;					 // Lowest possible value for K	
+        int ymax = 20;					 // Highest possible value for K
         int budget = 5000;				 // Budget for the initial runs
         
         int initialRuns = 2500;			  // initial runs for the Ranking and selection method
         double alpha = 0.05; 			  // alpha value for the Ranking and selection method
 
         TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
-        crn.simulateCommonRandomNumbersRun(k2,K2);
+        double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
 
         TemplateAssignment3 optimization = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         optimization.runLocalSearch();
