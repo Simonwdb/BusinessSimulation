@@ -198,6 +198,7 @@ public class TemplateAssignment3 {
         double[] results = new double[2];
 
         // perform CRN on (k,K) and (k2,K2) as parameters, average costs is result per run
+        // average costs per time unit kan je halen uit de statistics tally/accumulate van thresholdqueue
         // So:  results[0] = average costs per run with CRN & (k,K)
         // And: results[1] = average costs per run with CRN & (k2, K2)
         // TODO: We should also print these results somewhere, we can do this in main for example, by assigning the results to a variable and printing this.
