@@ -113,7 +113,7 @@ public class TemplateAssignment3 {
         long[] seed = new long[6];
 
         //TO DO: Fill the long[] with random seeds, for example, using rng
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < seed.length; i++) {
         	seed[i] = rng.nextLong();
         }
         
@@ -139,6 +139,9 @@ public class TemplateAssignment3 {
     }
 
     public State runRankingSelection(int initialRuns, double alpha) {
+    	/* SB:
+    	 * From slide 22 of lecture 3 "R&S approach (budget m and alpha between (0,1))"
+    	 */
 
         // perform initial runs
 
@@ -200,10 +203,10 @@ public class TemplateAssignment3 {
     }
 
     public static void main(String[] args) {
-        int k = ;             			 // k-threshold for queue
-        int K = ;             			 // K-threshold for queue
-        int k2 = ;            			 // k-threshold for alternative queue
-        int K2 = ;            			 // K-threshold for alternative queue
+        int k = 5;             			 // k-threshold for queue
+        int K = 20;             			 // K-threshold for queue (do we need to set this to 20 or to 10 -> see "switch to muH = 4"
+        int k2 = 10;            			 // k-threshold for alternative queue
+        int K2 = 20;            			 // K-threshold for alternative queue
         double lambda = 3./2;     			 //service rate	
         double muLow = 2;				 // average low service time
         double muHigh = 4;    			 // average high service time
