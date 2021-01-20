@@ -1,5 +1,6 @@
 package assignments;
 
+import assignments.TemplateAssignment2.Customer;
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
@@ -35,10 +36,32 @@ public class Ambulance extends Event {
     
     public void serviceCompleted(Ambulance amb, Accident currentCust) {
         // Process the completed `customer'
+    	// SB: are we here checking if the ambulance is within the target time (15)? 
+    	// SB: response time is the time between when the emergency call arrives and 
+    	// SB: when an ambulance arrives at the accident
+    	
+    	currentCust.completed(Sim.time());
+    	
+    	// SB: we need to find a value for the arriving emergency call and we can
+    	// SB: add that value on to drivingTimeToAccident()
+    	
+    	// SB: i'm not sure if amb.serviceTimeGen.nextDouble() is the value of the arriving emergency call
+    	double actualResponseTime = amb.serviceTimeGen.nextDouble() + drivingTimeToAccident(currentCust);
+    	
+    	if (actualResponseTime <= responseTime) {
+    		withinTargetTally.add(1);
+    	} else {
+    		withinTargetTally.add(0);
+    	}
+    	
+    	waitTimeTally.add(currentCust.getWaitTime());
+    	serviceTimeTally.add(currentCust.getServiceTime());
+    	
+    	// SB: do we need here to update that the ambulance is driving back from the hospital to it's base
     }
 
     public double drivingTimeToAccident(Accident cust) {
-        // calculate the driving time from the baselocation of the ambulance to the accident location
+        // calculate the driving time from the base location of the ambulance to the accident location
     	double[] base = this.baseRegion.baseLocation;
     	
     	double[] accidentBase = cust.getLocation();
