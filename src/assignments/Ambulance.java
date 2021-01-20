@@ -39,11 +39,18 @@ public class Ambulance extends Event {
 
     public double drivingTimeToAccident(Accident cust) {
         // calculate the driving time from the baselocation of the ambulance to the accident location
-        return 0.0;
+    	double[] base = this.baseRegion.baseLocation;
+    	
+    	double[] custBase = cust.getLocation();
+    	
+    	double result = Math.sqrt(Math.pow((custBase[0] - base[0]), 2) + Math.pow((custBase[1] - base[1]), 2));
+    	
+        return result;
     }
     
     public double drivingTimeToHostital(Accident cust) {
         // calculate the driving time from accident location to the hospital
+    	
         return 0.0;
     }
 
