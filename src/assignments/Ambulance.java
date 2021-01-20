@@ -57,6 +57,9 @@ public class Ambulance extends Event {
     	waitTimeTally.add(currentCust.getWaitTime());
     	serviceTimeTally.add(currentCust.getServiceTime());
     	
+    	// SB: update that the ambulance no longer serves a customer
+    	amb.currentCust = null;
+    	
     	// SB: do we need here to update that the ambulance is driving back from the hospital to it's base
     }
 
@@ -76,7 +79,7 @@ public class Ambulance extends Event {
     	
     	double[] accidentBase = cust.getLocation();
     	
-    	// SB: how can we access the Hospital location? 
+    	// SB: how can we access the location of the Hospital? 
     	// SB: i don't think creating a new object will be the right solution.. 
     	double[] hospitalBase = new Hospital().determineRegionLocation(this.baseRegion.regionID);	// determineRegionLocation() needs to be updated
     	

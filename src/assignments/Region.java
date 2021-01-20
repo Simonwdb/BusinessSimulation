@@ -1,6 +1,8 @@
 package assignments;
 
 import java.util.LinkedList;
+import java.util.Random;
+
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
@@ -35,6 +37,21 @@ public class Region {
     public double[] drawLocation() {
         // determine the location of the accident
         double[] location = new double[2];
+        
+        // SB: locations of arriving emergency calls are chosen uniform in their region
+        // SB: diameter of the hexagon (region) is 10km
+        // SB: coordinates can be chosen uniform over the surface of the hexagon. 
+        
+        /*
+         * even in NL:
+         * de diameter is 10, dan lijkt mij dat de straal 5 is.
+         * oppervlakte is dan: (3/2) * wortel(3) * 5^2
+         */
+        
+        double surfaceRegion = (3./2) * Math.sqrt(3) * Math.pow(5, 2);
+        
+        // SB: how can we choose uniformly between zero and surface?
+        
         location[0] = 0.0; // X-Coordinate of accident location
         location[1] = 0.0; // Y-Coordinate of accident location
         return location;
