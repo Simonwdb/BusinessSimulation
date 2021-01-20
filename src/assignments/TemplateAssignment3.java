@@ -114,7 +114,7 @@ public class TemplateAssignment3 {
 
         //TO DO: Fill the long[] with random seeds, for example, using rng
         for (int i = 0; i < seed.length; i++) {
-        	seed[i] = rng.nextLong();
+        	seed[i] = rng.nextInt();	// or nextLong() ?
         }
         
         MRG32k3a myrng = new MRG32k3a();
@@ -139,10 +139,42 @@ public class TemplateAssignment3 {
     }
 
     public State runRankingSelection(int initialRuns, double alpha) {
-    	/* SB:
+    	/* 
     	 * From slide 22 of lecture 3 "R&S approach (budget m and alpha between (0,1))"
+    	 * 
+    	 * |S| = k finite and small <- S = this.k?
+    	 * 
+    	 * 1) 	simulate every solution n times <- n = initialRuns? 
+    	 * 		and calculate averages rn(pi) and variances s^2n(pi)
+    	 * 
+    	 * 2)	perform pairwise t-test for (pi, pi') to see if pi is significantly
+    	 * 		"outperformed" by a pi', discard outperformed solutions
+    	 * 
+    	 * 3)	Divide remaining simulation budget m - n * |S| over the remaining candidate
+    	 * 		solutions I
+    	 * 
+    	 * note:	alpha_* = 1 - (1 - a) ^ |S| - 1 / 2	
     	 */
 
+    	// own calculations
+    	
+    	double S = (double) this.k;	// is this correct ?
+    	
+    	// are we allowed to import the Math class?
+    	
+    	// calculation from slide 22
+    	// alpha_* = 1 - (1 - a) ^ |S| - 1 / 2	
+    	double alpha_ = 1 - Math.pow((1- alpha), 1 / (S - 1)); 
+    	System.out.println("alpha_ : " + alpha_);
+    	
+    	// end
+    	
+    	// simulation every solution
+    	for (int i = 0; i < initialRuns; i++) {
+    		
+    	}
+    	
+    	
         // perform initial runs
 
         HashSet<State> I = selectCandidateSolutions(alpha);
@@ -158,7 +190,6 @@ public class TemplateAssignment3 {
         HashSet<State> I = new HashSet();
 
         // find all candidate solutions for the ranking and selection method
-        // kusjes van wouter kager
         return I;
     }
 
@@ -198,6 +229,7 @@ public class TemplateAssignment3 {
         double[] results = new double[2];
 
         // perform CRN on (k,K) and (k2,K2) as parameters, average costs is result per run
+        
         // average costs per time unit kan je halen uit de statistics tally/accumulate van thresholdqueue
         // So:  results[0] = average costs per run with CRN & (k,K)
         // And: results[1] = average costs per run with CRN & (k2, K2)
@@ -224,7 +256,7 @@ public class TemplateAssignment3 {
         
         int initialRuns = 2500;			  // initial runs for the Ranking and selection method
         double alpha = 0.05; 			  // alpha value for the Ranking and selection method
-
+        
         TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
 
