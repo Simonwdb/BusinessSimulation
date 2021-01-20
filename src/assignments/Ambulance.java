@@ -60,7 +60,7 @@ public class Ambulance extends Event {
     	// SB: update that the ambulance no longer serves a customer
     	amb.currentCust = null;
     	
-    	// SB: do we need here to update that the ambulance is driving back from the hospital to it's base
+    	// SB: do we need here to update that the ambulance is driving back from the hospital to it's base.
     }
 
     public double drivingTimeToAccident(Accident cust) {
