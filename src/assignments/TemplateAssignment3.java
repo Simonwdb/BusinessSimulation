@@ -2,6 +2,7 @@ package assignments;
 
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Arrays;
 import umontreal.ssj.probdist.NormalDist;
 import umontreal.ssj.rng.MRG32k3a;
 import umontreal.ssj.simevents.Sim;
@@ -128,7 +129,12 @@ public class TemplateAssignment3 {
     	MRG32k3a arrival = getStream();
         MRG32k3a service = getStream();
         
-        // init simulation and create threshold queue
+        runSimulation(k,K, arrival, service);
+    }
+    
+    public void runSimulation(int k, int K, MRG32k3a arrival, MRG32k3a service) {
+        
+    	// init simulation and create threshold queue
         Sim.init();
         ThresholdQueue model = new ThresholdQueue(lambda, avgService, avgHighService, stopTime, k, K, arrival, service);
        
@@ -136,6 +142,18 @@ public class TemplateAssignment3 {
         double result = model.getAverageCosts().average();
         int i = calcPos(k, K);
         outputs[i].values.add(result);
+		
+	}
+
+	public void runDoubleRunCRN(int k, int K, int k2, int K2) {
+
+        // init random sources
+    	MRG32k3a arrival = getStream();
+        MRG32k3a service = getStream();
+        
+        // Use the same random values (CRN)
+        runSimulation(k,K,arrival, service);
+        runSimulation(k2,K2,arrival,service);
     }
 
     public State runRankingSelection(int initialRuns, double alpha) {
@@ -229,11 +247,24 @@ public class TemplateAssignment3 {
         double[] results = new double[2];
 
         // perform CRN on (k,K) and (k2,K2) as parameters, average costs is result per run
+        runDoubleRunCRN(k, K, k2, K2);
         
-        // average costs per time unit kan je halen uit de statistics tally/accumulate van thresholdqueue
+        // compute indices for outputs
+        int i1 = calcPos(k, K);
+        int i2 = calcPos(k2, K2);
+        
+        // We perform only two runs now, one for (k,K), one for (k2,K2)
+        double result1 = outputs[i1].values.average(); // note that this can be used for more runs, as with one run the average is equal to the (only) value in values itself.
+        double result2 = outputs[i2].values.average();
+        
+        // average costs per time unit kan je halen uit de outputs array, door eerst k en K te vertalen
+        
         // So:  results[0] = average costs per run with CRN & (k,K)
         // And: results[1] = average costs per run with CRN & (k2, K2)
         // TODO: We should also print these results somewhere, we can do this in main for example, by assigning the results to a variable and printing this.
+        
+        results[0] = result1;
+        results[1] = result2;
 
         return results;
     }
@@ -259,6 +290,7 @@ public class TemplateAssignment3 {
         
         TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
+        System.out.println(Arrays.toString(results));
 
         TemplateAssignment3 optimization = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         optimization.runLocalSearch();
