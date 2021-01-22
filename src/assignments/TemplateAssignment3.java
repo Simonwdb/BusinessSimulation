@@ -1,6 +1,7 @@
 package assignments;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Arrays;
 import umontreal.ssj.probdist.NormalDist;
@@ -37,7 +38,7 @@ public class TemplateAssignment3 {
     static final double BIGM = 9999999999999.99;
 
     public TemplateAssignment3(int xmin, int xmax, int ymin, int ymax, int budget, double lambda, double muLow, double muHigh, double stopTime, int k, int K) {
-       
+        
     	// check how many states are possible
     	int xrange = xmax - xmin + 1;
         int yrange = ymax - ymin + 1;
@@ -235,28 +236,69 @@ public class TemplateAssignment3 {
     		runSingleRunState(currpi);
     		runSingleRunState(neighborpi);
     		currpi = selectBestState(currpi, neighborpi); // move to "best" solution of the two
-    		m = m-2; 									  // update simulation budget (two states visited)
+    		m = m-2; 									  // update simulation budget with # simulation budget left (two states visited)
     	}
     	
     	// NB: does not return anything, best state is selected by method selectOptimalState in runLocalSearch
 	}
 
     public State selectRandomStart() {
-        State state = null;
 
         // select a random state
+        int i = randOutputIndex(); 
+        State state = outputs[i];
 
         return state;
     }
 
-    public State selectRandomNeighbor(State state) {
+    private int randOutputIndex() {
+		// Return a random index from the outputs array
+        MRG32k3a rand1 = getStream();
+        MRG32k3a rand2 = getStream();
+        int rx = rand1.nextInt(xmin, xmax);
+        int ry = rand2.nextInt(ymin, ymax);
+        int i = calcPos(rx,ry);
+        return i;
+	}
+
+	public State selectRandomNeighbor(State state) {
         State neighbor = null; // Temporary: nog niet af dus returnt null. TODO: dit vervangen later, ook voor andere methoden.
         
-        // select a random neighbor
+        // get all neighbors
+        List<State> neighbors = getAllNeighbors(state);
+        // select a random one from the list
 
         return neighbor;
     }
     
+	private List<State> getAllNeighbors(State state) {
+		// TODO Auto-generated method stub
+		int x = state.xval;
+		int y = state.yval;
+		
+		// return all neighbors in array
+		return null;
+	}
+
+	private int getkNeighbor(int x) {
+		// TODO Auto-generated method stub
+		if (x == xmax)
+			return (xmax-1);
+		if (x == xmin)
+			return (xmin+1);
+		else {
+			int nx = getNeighborNoChecks(x);
+			return nx;
+		}
+	}
+
+	private int getNeighborNoChecks(int n) {
+		// Get +1 or -1, or just the same
+		MRG32k3a rand = getStream();
+		int zeroorone = rand.
+		return 0;
+	}
+
 	private void runSingleRunState(State pi) {
 		// Wrapper method: Performs a 'run' for a certain state
 		int k = pi.xval;
