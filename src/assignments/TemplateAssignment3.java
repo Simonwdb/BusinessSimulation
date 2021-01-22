@@ -223,8 +223,8 @@ public class TemplateAssignment3 {
     public State selectBestState(State current, State neighbor){
 
     	// return best state
-
-        return current;
+    	// SB: compare the averages of the two parameters and the lowest one is the BestState
+        return (current.values.average() <= neighbor.values.average()) ? current: neighbor;
     }
 
     public State selectRandomStart() {
