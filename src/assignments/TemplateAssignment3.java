@@ -231,7 +231,7 @@ public class TemplateAssignment3 {
     	
     	while (m>0) {
     		State neighborpi = selectRandomNeighbor(currpi);
-    		// Simulate output for both states and update the current sample average for both (done by runSingleRun, in output values average)
+    		// Simulate output for both states and update the current sample average for both (done by runSingleRun, through output values average)
     		runSingleRunState(currpi);
     		runSingleRunState(neighborpi);
     		currpi = selectBestState(currpi, neighborpi); // move to "best" solution of the two
@@ -240,20 +240,6 @@ public class TemplateAssignment3 {
     	
     	// NB: does not return anything, best state is selected by method selectOptimalState in runLocalSearch
 	}
-
-	public State selectBestState(State current, State neighbor){
-
-    	// return best state
-		double rcurrent = current.values.average();
-		double rneighbor = neighbor.values.average();
-		
-		// If the sample average of the neighbor is better, select neighbor
-		if(rneighbor >= rcurrent)
-			return neighbor;
-		// Otherwise, stay at current state
-		else
-			return current;
-    }
 
     public State selectRandomStart() {
         State state = null;
@@ -278,6 +264,20 @@ public class TemplateAssignment3 {
 		
 		runSingleRun(k, K);
 	}
+	
+	public State selectBestState(State current, State neighbor) {
+
+    	// return best state
+		double rcurrent = current.values.average();
+		double rneighbor = neighbor.values.average();
+		
+		// If the sample average of the neighbor is better (which means: lower! as in lower costs), select neighbor
+		if(rneighbor <= rcurrent)
+			return neighbor;
+		// Otherwise, stay at current state
+		else
+			return current;
+    }
 
     public double[] simulateCommonRandomNumbersRun(int k2, int K2){
         double[] results = new double[2];
