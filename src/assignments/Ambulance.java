@@ -87,7 +87,9 @@ public class Ambulance extends Event {
     	double result = Math.sqrt(Math.pow((accidentBase[0] - hospitalBase[0]), 2) + Math.pow((accidentBase[1] - hospitalBase[1]), 2));
     	*/
     	
-    	// SB: is the baseLocation of the ambulance the same as the baseLocation of the hospital? If so, we can use drivingTimeToAccident() again to calculate the time/distance
+    	// SB: is the baseLocation of the ambulance the same as the baseLocation of the hospital?
+    	// SB: if so, we can use drivingTimeToAccident() again to calculate the time/distance
+    	// SB: assumption based on sentence from assingment4 pdf "In total, the ambulance server has 20 ambulances that need to be placed at the waiting docks."
     	
         return drivingTimeToAccident(cust);
     }
