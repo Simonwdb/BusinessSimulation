@@ -214,17 +214,45 @@ public class TemplateAssignment3 {
     public State runLocalSearch() {
 
     	// perform Local Search
-
+    	performLocalSearch();
+    	
+    	// Choose state with the lowest _r(pi), lowest sample average, based on localSearch
         State opt = selectOptimalState();
 
         return opt;
     }
 
-    public State selectBestState(State current, State neighbor){
+    private void performLocalSearch() {
+		// Initialisation
+    	State currpi = selectRandomStart(); // keeps track of current state, start somewhere random
+    	int m = budget; 					// keep track of the simulation budget
+    	// NB: sample outputs are already reset in main(), as a new object of TemplateAssignment3 is created
+    	// this means we do not have to initialise sample averages / r, for certain states/solutions
+    	
+    	while (m>0) {
+    		State neighborpi = selectRandomNeighbor(currpi);
+    		// Simulate output for both states and update the current sample average for both (done by runSingleRun, in output values average)
+    		runSingleRunState(currpi);
+    		runSingleRunState(neighborpi);
+    		currpi = selectBestState(currpi, neighborpi); // move to "best" solution of the two
+    		m = m-2; 									  // update simulation budget (two states visited)
+    	}
+    	
+    	// NB: does not return anything, best state is selected by method selectOptimalState in runLocalSearch
+	}
+
+	public State selectBestState(State current, State neighbor){
 
     	// return best state
-    	// SB: compare the averages of the two parameters and the lowest one is the BestState
-        return (current.values.average() <= neighbor.values.average()) ? current: neighbor;
+		double rcurrent = current.values.average();
+		double rneighbor = neighbor.values.average();
+		
+		// If the sample average of the neighbor is better, select neighbor
+		if(rneighbor >= rcurrent)
+			return neighbor;
+		// Otherwise, stay at current state
+		else
+			return current;
     }
 
     public State selectRandomStart() {
@@ -242,6 +270,14 @@ public class TemplateAssignment3 {
 
         return neighbor;
     }
+    
+	private void runSingleRunState(State pi) {
+		// Wrapper method: Performs a 'run' for a certain state
+		int k = pi.xval;
+		int K = pi.yval;
+		
+		runSingleRun(k, K);
+	}
 
     public double[] simulateCommonRandomNumbersRun(int k2, int K2){
         double[] results = new double[2];
