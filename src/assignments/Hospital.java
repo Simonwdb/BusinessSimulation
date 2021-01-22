@@ -55,8 +55,9 @@ public class Hospital {
     public double[] determineRegionLocation(int j) {
         // This function must be adjusted
         double[] location = new double[2];
-        location[0] = 0.0; // X-Coordinate of accident location
-        location[1] = 0.0; // Y-Coordinate of accident location
+        // SB: i think the ask for the baseLocation instead of accident location, see line 76 below
+        location[0] = regions[j].baseLocation[0]; // X-Coordinate of accident location
+        location[1] = regions[j].baseLocation[1]; // Y-Coordinate of accident location
         return location;
     }
 
