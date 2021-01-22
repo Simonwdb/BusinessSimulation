@@ -3,6 +3,7 @@ package assignments;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Arrays;
 import umontreal.ssj.probdist.NormalDist;
 import umontreal.ssj.rng.MRG32k3a;
@@ -219,16 +220,20 @@ public class TemplateAssignment3 {
     	
     	// Choose state with the lowest _r(pi), lowest sample average, based on localSearch
         State opt = selectOptimalState();
-
+        System.out.println("k =");
+        System.out.println(opt.xval);
+        System.out.println("K =");
+        System.out.println(opt.yval);
+        
         return opt;
     }
 
     private void performLocalSearch() {
-		// Initialisation
+		// Initialization
     	State currpi = selectRandomStart(); // keeps track of current state, start somewhere random
     	int m = budget; 					// keep track of the simulation budget
     	// NB: sample outputs are already reset in main(), as a new object of TemplateAssignment3 is created
-    	// this means we do not have to initialise sample averages / r, for certain states/solutions
+    	// this means we do not have to initialize sample averages / r, for certain states/solutions
     	
     	while (m>0) {
     		State neighborpi = selectRandomNeighbor(currpi);
@@ -243,7 +248,6 @@ public class TemplateAssignment3 {
 	}
 
     public State selectRandomStart() {
-
         // select a random state
         int i = randOutputIndex(); 
         State state = outputs[i];
@@ -262,42 +266,54 @@ public class TemplateAssignment3 {
 	}
 
 	public State selectRandomNeighbor(State state) {
-        State neighbor = null; // Temporary: nog niet af dus returnt null. TODO: dit vervangen later, ook voor andere methoden.
-        
-        // get all neighbors
-        List<State> neighbors = getAllNeighbors(state);
+        State neighbor;    
+        // get all neighbors (denoted by their unique indices corresponding to a certain k and K (or x and y))
+        List<Integer> ineighbors = getAllNeighbors(state);
         // select a random one from the list
-
+        int ri = pickRandom(ineighbors);
+        neighbor = outputs[ri];
         return neighbor;
     }
     
-	private List<State> getAllNeighbors(State state) {
-		// TODO Auto-generated method stub
-		int x = state.xval;
-		int y = state.yval;
+	private int pickRandom(List<Integer> list) {
+		// Pick a random number from this list
+		int li = 0; 				 // always a lower bound index of this list
+		int ui = list.size() - 1; // last possible index of this list
 		
-		// return all neighbors in array
-		return null;
-	}
-
-	private int getkNeighbor(int x) {
-		// TODO Auto-generated method stub
-		if (x == xmax)
-			return (xmax-1);
-		if (x == xmin)
-			return (xmin+1);
-		else {
-			int nx = getNeighborNoChecks(x);
-			return nx;
-		}
-	}
-
-	private int getNeighborNoChecks(int n) {
-		// Get +1 or -1, or just the same
 		MRG32k3a rand = getStream();
-		int zeroorone = rand.
-		return 0;
+		int ri = rand.nextInt(li, ui); // random index between li and ui
+		int relement = list.get(ri);
+		return relement;
 	}
+
+	private List<Integer> getAllNeighbors(State state) {
+		// return all neighbors in the list
+		List<Integer> result = new ArrayList<Integer>();
+		// abbreviate the k and K of this state
+		int x = state.xval; // k of this state
+		int y = state.yval; // K of this state
+		
+		// set correct lower and upper bounds for neighbors
+		int xl = Math.max(x-1, xmin);
+		int xu = Math.min(x+1, xmax);
+		int yl = Math.max(y-1, ymin);
+		int yu = Math.min(y+1, ymax);
+		
+		for(int nx = xl; nx<=xu; nx++)
+			for(int ny = yl; ny<=yu; ny++) {
+				// do not include the current state as a "neighbor"
+				boolean sameascurr = (nx == x) && (ny == y);
+				if(sameascurr) // if so, skip this iteration
+					continue;
+				
+				// if this is a correct neighbor, calculate its unique index
+				int ni = calcPos(nx, ny);
+				// and add it to the result array
+				result.add(ni);
+			}
+		return result;
+	}
+
 
 	private void runSingleRunState(State pi) {
 		// Wrapper method: Performs a 'run' for a certain state
