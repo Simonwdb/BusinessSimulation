@@ -82,7 +82,7 @@ public class Ambulance extends Event {
     	// SB: how can we access the location of the Hospital? 
     	// SB: i don't think creating a new object will be the right solution.. 
     	double[] hospitalBase = new Hospital().determineRegionLocation(this.baseRegion.regionID);	// determineRegionLocation() needs to be updated
-    	
+    			
     	double result = Math.sqrt(Math.pow((accidentBase[0] - hospitalBase[0]), 2) + Math.pow((accidentBase[1] - hospitalBase[1]), 2));
     	
         return result;
