@@ -76,16 +76,20 @@ public class Ambulance extends Event {
     
     public double drivingTimeToHostital(Accident cust) {
         // calculate the driving time from accident location to the hospital
-    	
+    	/*
     	double[] accidentBase = cust.getLocation();
     	
     	// SB: how can we access the location of the Hospital? 
-    	// SB: i don't think creating a new object will be the right solution.. 
+    	// SB: i don't think creating a new object will be the right solution
+    	
     	double[] hospitalBase = new Hospital().determineRegionLocation(this.baseRegion.regionID);	// determineRegionLocation() needs to be updated
     			
     	double result = Math.sqrt(Math.pow((accidentBase[0] - hospitalBase[0]), 2) + Math.pow((accidentBase[1] - hospitalBase[1]), 2));
+    	*/
     	
-        return result;
+    	// SB: is the baseLocation of the ambulance the same as the baseLocation of the hospital? If so, we can use drivingTimeToAccident() again to calculate the time/distance
+    	
+        return drivingTimeToAccident(cust);
     }
 
     @Override
