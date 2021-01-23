@@ -220,15 +220,12 @@ public class TemplateAssignment3 {
     	
     	// Choose state with the lowest _r(pi), lowest sample average, based on localSearch
         State opt = selectOptimalState();
-        System.out.println("k =");
-        System.out.println(opt.xval);
-        System.out.println("K =");
-        System.out.println(opt.yval);
+        printLocalSearchResults(opt); // added for our convenience
         
         return opt;
     }
 
-    private void performLocalSearch() {
+	private void performLocalSearch() {
 		// Initialization
     	State currpi = selectRandomStart(); // keeps track of current state, start somewhere random
     	int m = budget; 					// keep track of the simulation budget
@@ -254,8 +251,18 @@ public class TemplateAssignment3 {
 
         return state;
     }
-
+    
     private int randOutputIndex() {
+		// Return a random index from the outputs array
+        MRG32k3a rand = getStream();
+        int l = 0;			   // lowest possible index
+        int u = numStates - 1; // largest possible index
+        int i = rand.nextInt(l,u);
+        return i;
+	}
+    
+    private int randOutputIndex2() {
+    	// not used: slower version of randOutputIndex
 		// Return a random index from the outputs array
         MRG32k3a rand1 = getStream();
         MRG32k3a rand2 = getStream();
@@ -267,10 +274,11 @@ public class TemplateAssignment3 {
 
 	public State selectRandomNeighbor(State state) {
         State neighbor;    
-        // get all neighbors (denoted by their unique indices corresponding to a certain k and K (or x and y))
+        // get all neighbors (denoted by their unique indices corresponding to a certain k and K (or xval and yval))
         List<Integer> ineighbors = getAllNeighbors(state);
         // select a random one from the list
         int ri = pickRandom(ineighbors);
+        // return the correct state corresponding to this index
         neighbor = outputs[ri];
         return neighbor;
     }
@@ -278,30 +286,33 @@ public class TemplateAssignment3 {
 	private int pickRandom(List<Integer> list) {
 		// Pick a random number from this list
 		int li = 0; 				 // always a lower bound index of this list
-		int ui = list.size() - 1; // last possible index of this list
+		int ui = list.size() - 1;    // last possible index of this list
 		
 		MRG32k3a rand = getStream();
 		int ri = rand.nextInt(li, ui); // random index between li and ui
-		int relement = list.get(ri);
+		int relement = list.get(ri);   // retrieve the element at this index ri and return it
 		return relement;
 	}
 
 	private List<Integer> getAllNeighbors(State state) {
-		// return all neighbors in the list
+		// return all neighbors in the list, denote them by their unique index (used in outputs[])
 		List<Integer> result = new ArrayList<Integer>();
 		// abbreviate the k and K of this state
 		int x = state.xval; // k of this state
 		int y = state.yval; // K of this state
 		
 		// set correct lower and upper bounds for neighbors
+		// xmax/xmin/ymin/ymax checks are done to ensure correct "corner neighbors"
+		// e.g. xl is the lower bound for x neighbor, if x = xmin, xl is also equal to xmin instead of x-1, etc.
 		int xl = Math.max(x-1, xmin);
 		int xu = Math.min(x+1, xmax);
 		int yl = Math.max(y-1, ymin);
 		int yu = Math.min(y+1, ymax);
 		
+		// Add every neighbor in the "neighbourhood" (within xl,xu,yl,yu) to the list
 		for(int nx = xl; nx<=xu; nx++)
 			for(int ny = yl; ny<=yu; ny++) {
-				// do not include the current state as a "neighbor"
+				// do not include the current state as a "neighbor"!
 				boolean sameascurr = (nx == x) && (ny == y);
 				if(sameascurr) // if so, skip this iteration
 					continue;
@@ -336,7 +347,18 @@ public class TemplateAssignment3 {
 		else
 			return current;
     }
-
+	
+    private void printLocalSearchResults(State opt) {
+		// Prints out the k and K of this "optimal" state
+    	System.out.println("Local search results - best state found is:");
+        System.out.println("k =");
+        System.out.println(opt.xval);
+        System.out.println("K =");
+        System.out.println(opt.yval);
+		// and the average costs found for this choice of threshold settings
+        System.out.println("Average costs per time unit (long-run):");
+        System.out.println(opt.values.average());
+	}
     public double[] simulateCommonRandomNumbersRun(int k2, int K2){
         double[] results = new double[2];
 
@@ -351,19 +373,28 @@ public class TemplateAssignment3 {
         double result1 = outputs[i1].values.average(); // note that this can be used for more runs, as with one run the average is equal to the (only) value in values itself.
         double result2 = outputs[i2].values.average();
         
-        // average costs per time unit kan je halen uit de outputs array, door eerst k en K te vertalen
-        
         // So:  results[0] = average costs per run with CRN & (k,K)
         // And: results[1] = average costs per run with CRN & (k2, K2)
-        // TODO: We should also print these results somewhere, we can do this in main for example, by assigning the results to a variable and printing this.
         
         results[0] = result1;
         results[1] = result2;
-
+        
+        printCRNResults(results); // added for our convenience
+        
         return results;
     }
 
-    public static void main(String[] args) {
+    private void printCRNResults(double[] results) {
+		// Prints out the results
+    	System.out.println("Results of CRN runs - for given k and K");
+    	System.out.println("Average costs per run (with CRN) for");
+    	System.out.println("[k=5,K=20]:");
+    	System.out.println(results[0]);
+    	System.out.println("And [k2=10,K2=20]:");
+    	System.out.println(results[1]);
+	}
+
+	public static void main(String[] args) {
         int k = 5;             			 // k-threshold for queue
         int K = 20;             			 // K-threshold for queue (do we need to set this to 20 or to 10 -> see "switch to muH = 4"
         int k2 = 10;            			 // k-threshold for alternative queue
@@ -382,9 +413,9 @@ public class TemplateAssignment3 {
         int initialRuns = 2500;			  // initial runs for the Ranking and selection method
         double alpha = 0.05; 			  // alpha value for the Ranking and selection method
         
+        // Note that the results are printed inside their respective methods
         TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
-        System.out.println(Arrays.toString(results));
 
         TemplateAssignment3 optimization = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         optimization.runLocalSearch();
