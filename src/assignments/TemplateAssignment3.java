@@ -388,9 +388,9 @@ public class TemplateAssignment3 {
 		// Prints out the results
     	System.out.println("Results of CRN runs - for given k and K");
     	System.out.println("Average costs per run (with CRN) for");
-    	System.out.println("[k=5,K=20]:");
+    	System.out.println("(k=5, K=20):");
     	System.out.println(results[0]);
-    	System.out.println("And [k2=10,K2=20]:");
+    	System.out.println("And (k2=10, K2=20):");
     	System.out.println(results[1]);
 	}
 
