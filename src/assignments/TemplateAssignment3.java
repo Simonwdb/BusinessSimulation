@@ -214,7 +214,7 @@ public class TemplateAssignment3 {
         		double t_test = Math.abs(avgCost1 - avgCost2) / (Math.sqrt(Math.pow(stDev1, 2) / simulationAmount + Math.pow(stDev2, 2) / simulationAmount));
         		
         		if (t_test < val) {
-        			int[] coords = null;
+        			int[] coords = {0,0};
         			if (this.outputs[i].values.average() < this.outputs[j].values.average()) {
         				coords[0] = this.outputs[i].xval;
         				coords[1] = this.outputs[i].yval;
@@ -433,11 +433,11 @@ public class TemplateAssignment3 {
         double alpha = 0.05; 			  // alpha value for the Ranking and selection method
         
         // Note that the results are printed inside their respective methods
-        TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
-        double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
+        //TemplateAssignment3 crn = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
+        //double results[] = crn.simulateCommonRandomNumbersRun(k2,K2);
 
-        TemplateAssignment3 optimization = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
-        optimization.runLocalSearch();
+        //TemplateAssignment3 optimization = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
+        //optimization.runLocalSearch();
 
         TemplateAssignment3 optimization2 = new TemplateAssignment3(xmin, xmax, ymin, ymax, budget, lambda, muLow, muHigh, stopTime, k, K);
         optimization2.runRankingSelection(initialRuns, alpha);
