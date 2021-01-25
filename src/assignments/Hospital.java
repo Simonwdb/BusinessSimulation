@@ -85,8 +85,19 @@ public class Hospital {
 
         // use ambulancePlacements to return the right base region index for
         // the ambulance with ambulanceNumber
+    	
+    	// SB: in the previous file from canvas, this function was already filled
+    	// SB: below in multiple comment-line is the code from that previous file
+    	/*
+    	 *     public int determineBaseRegion(int ambulanceNumber) {
+			        // This function can be altered to test different ambulance placements
+			        return ambulanceNumber % numRegions;
+			    }
+    	 */
 
-        return 0;
+    	// SB: can we use the code from above?
+    	
+        return ambulanceNumber % this.numRegions;
     }
 
     // returns the location coordinates of the base of region j
