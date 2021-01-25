@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.Arrays;
 import umontreal.ssj.probdist.NormalDist;
+import umontreal.ssj.probdist.StudentDist;
 import umontreal.ssj.rng.MRG32k3a;
 import umontreal.ssj.simevents.Sim;
 import umontreal.ssj.stat.TallyStore;
@@ -159,55 +160,73 @@ public class TemplateAssignment3 {
     }
 
     public State runRankingSelection(int initialRuns, double alpha) {
-    	/* 
-    	 * From slide 22 of lecture 3 "R&S approach (budget m and alpha between (0,1))"
-    	 * 
-    	 * |S| = k finite and small <- S = this.k?
-    	 * 
-    	 * 1) 	simulate every solution n times <- n = initialRuns? 
-    	 * 		and calculate averages rn(pi) and variances s^2n(pi)
-    	 * 
-    	 * 2)	perform pairwise t-test for (pi, pi') to see if pi is significantly
-    	 * 		"outperformed" by a pi', discard outperformed solutions
-    	 * 
-    	 * 3)	Divide remaining simulation budget m - n * |S| over the remaining candidate
-    	 * 		solutions I
-    	 * 
-    	 * note:	alpha_* = 1 - (1 - a) ^ |S| - 1 / 2	
-    	 */
-
-    	// own calculations
     	
-    	double S = (double) this.k;	// is this correct ?
+    	int firstRun = initialRuns / this.numStates;
     	
-    	// are we allowed to import the Math class?
-    	
-    	// calculation from slide 22
-    	// alpha_* = 1 - (1 - a) ^ |S| - 1 / 2	
-    	double alpha_ = 1 - Math.pow((1- alpha), 1 / (S - 1)); 
-    	System.out.println("alpha_ : " + alpha_);
-    	
-    	// end
-    	
-    	// simulation every solution
-    	for (int i = 0; i < initialRuns; i++) {
-    		
+    	for (int i = 0; i < firstRun; i++) {
+    		for (int j = 0; j < this.numStates; j++) {
+    			runSingleRun(this.outputs[j].xval, this.outputs[j].yval);
+    		}
     	}
     	
+    	HashSet<State> I = selectCandidateSolutions(alpha);
     	
-        // perform initial runs
-
-        HashSet<State> I = selectCandidateSolutions(alpha);
-
-        // perform rest of the runs
-
-        State opt = selectOptimalState();
-
-        return opt;
+    	int lengthOfI = I.size();
+    	State[] candidates = I.toArray(new State[lengthOfI]);
+    	
+    	
+    	int secondRun = (this.budget - initialRuns) / candidates.length;
+    	
+    	for (int i = 0; i < secondRun; i++) {
+    		for (int j = 0; j < this.numStates; j++) {
+    			runSingleRun(candidates[i].xval, candidates[i].yval);
+    		}
+    	}
+    	
+    	State opt = selectOptimalState();
+    	
+    	return opt;
     }
 
     public HashSet<State> selectCandidateSolutions(double alpha) {
+
         HashSet<State> I = new HashSet();
+        ArrayList<Double> avg = new ArrayList<Double>();
+        ArrayList<Double> var = new ArrayList<Double>();
+        
+        int simulationAmount = (this.budget / 2) / this.numStates;
+        
+        for (int i = 0; i < this.numStates; i++) {
+        	avg.add(this.outputs[i].values.average());
+        	var.add(this.outputs[i].values.variance());
+        }
+        
+        StudentDist dist = new StudentDist(this.numStates - 1);
+        double val = dist.inverseF(1 - alpha);
+        
+        for (int i = 0; i < this.numStates; i++) {
+        	for (int j = 1; j < this.numStates - 1; j++) {
+        		double avgCost1 = Math.abs(avg.get(i));
+        		double avgCost2 = Math.abs(avg.get(j));
+        		double stDev1 = Math.abs(Math.sqrt(var.get(i)));
+        		double stDev2 = Math.abs(Math.sqrt(var.get(j)));
+        		
+        		double t_test = Math.abs(avgCost1 - avgCost2) / (Math.sqrt(Math.pow(stDev1, 2) / simulationAmount + Math.pow(stDev2, 2) / simulationAmount));
+        		
+        		if (t_test > val) {
+        			int[] coords = null;
+        			if (this.outputs[i].values.average() < this.outputs[j].values.average()) {
+        				coords[0] = this.outputs[i].xval;
+        				coords[1] = this.outputs[i].yval;
+        			} else {
+        				coords[0] = this.outputs[j].xval;
+        				coords[1] = this.outputs[j].yval;
+        			}
+        			State c = getState(coords);
+        			I.add(c);
+        		}
+        	}
+        }
 
         // find all candidate solutions for the ranking and selection method
         return I;

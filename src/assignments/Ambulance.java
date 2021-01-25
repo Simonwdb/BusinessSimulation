@@ -89,7 +89,7 @@ public class Ambulance extends Event {
     	
     	// SB: is the baseLocation of the ambulance the same as the baseLocation of the hospital?
     	// SB: if so, we can use drivingTimeToAccident() again to calculate the time/distance
-    	// SB: assumption based on sentence from assingment4 pdf "In total, the ambulance server has 20 ambulances that need to be placed at the waiting docks."
+    	// SB: assumption based on sentence from assingment4.pdf "In total, the ambulance server has 20 ambulances that need to be placed at the waiting docks."
     	
         return drivingTimeToAccident(cust);
     }
