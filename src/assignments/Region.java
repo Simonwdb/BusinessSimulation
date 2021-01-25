@@ -43,10 +43,16 @@ public class Region {
 
     // returns a random location inside the region
     public double[] drawLocation() {
-        // determine the location of the accident
+    	// SB: i think we can use locationStream.nextInt(i, j), it will return an integer of random integers between i and j
+    	int i = 0;	// smallest integer that can be generated
+    	int j = 0;	// greatest integer that can be generated
+    	
+    	// SB: but how can we determine the bounds for i and j
+    	
+    	// determine the location of the accident
         double[] location = new double[2];
-        location[0] = 0.0; // X-Coordinate of accident location
-        location[1] = 0.0; // Y-Coordinate of accident location
+        location[0] = (double) locationStream.nextInt(i, j); // X-Coordinate of accident location
+        location[1] = (double) locationStream.nextInt(i, j); // Y-Coordinate of accident location
         return location;
     }
     
