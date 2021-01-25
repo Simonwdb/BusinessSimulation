@@ -178,13 +178,14 @@ public class TemplateAssignment3 {
     	int secondRun = (this.budget - initialRuns) / candidates.length;
     	
     	for (int i = 0; i < secondRun; i++) {
-    		for (int j = 0; j < this.numStates; j++) {
-    			runSingleRun(candidates[i].xval, candidates[i].yval);
-    		}
+//    		for (int j = 0; j < this.numStates; j++) {
+//    			runSingleRun(candidates[i].xval, candidates[i].yval);
+//    		}
+    		runSingleRun(candidates[i].xval, candidates[i].yval);
     	}
     	
     	State opt = selectOptimalState();
-    	
+    	printRunAndSelectionResults(opt);
     	return opt;
     }
 
@@ -202,7 +203,10 @@ public class TemplateAssignment3 {
         }
         
         StudentDist dist = new StudentDist(this.numStates - 1);
-        double val = dist.inverseF(1 - alpha);
+        double salpha = 1 - alpha;
+        int ssolutions = this.numStates - 1;
+        double sidakalpha = 1 - Math.pow(salpha, 1/ssolutions); // take the solutions root 
+        double val = dist.inverseF(1 - sidakalpha);
         
         for (int i = 0; i < this.numStates; i++) {
         	for (int j = 1; j < this.numStates - 1; j++) {
@@ -214,7 +218,7 @@ public class TemplateAssignment3 {
         		double t_test = Math.abs(avgCost1 - avgCost2) / (Math.sqrt(Math.pow(stDev1, 2) / simulationAmount + Math.pow(stDev2, 2) / simulationAmount));
         		
         		if (t_test < val) {
-        			int[] coords = null;
+        			int[] coords = {0, 0};
         			if (this.outputs[i].values.average() < this.outputs[j].values.average()) {
         				coords[0] = this.outputs[i].xval;
         				coords[1] = this.outputs[i].yval;
@@ -378,6 +382,19 @@ public class TemplateAssignment3 {
         System.out.println("Average costs per time unit (long-run):");
         System.out.println(opt.values.average());
 	}
+    
+    private void printRunAndSelectionResults(State opt) {
+		// Prints out the k and K of this "optimal" state
+    	System.out.println("Run and Selection results - best state found is:");
+        System.out.println("k =");
+        System.out.println(opt.xval);
+        System.out.println("K =");
+        System.out.println(opt.yval);
+		// and the average costs found for this choice of threshold settings
+        System.out.println("Average costs per time unit (long-run):");
+        System.out.println(opt.values.average());
+	}
+    
     public double[] simulateCommonRandomNumbersRun(int k2, int K2){
         double[] results = new double[2];
 
