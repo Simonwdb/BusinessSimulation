@@ -39,6 +39,15 @@ public class Region {
     
     public void handleArrival() {
         // create and process a new accident
+    	// SB: possible steps to be taken:
+    	// 			- adding location to a new accident
+    	//			- check for idle ambulance
+    	//				- if idle, check if queue has elements
+		//					- if queue, remove accident from queue and start service, append new created accident to queue
+    	//					- if not queue, start with new created accident
+    	//				- if not idle, append new created accident to queue
+    	
+    	// SB: am i missing some steps here? I think that's the way to handle an arrival?
     }
 
     // returns a random location inside the region
