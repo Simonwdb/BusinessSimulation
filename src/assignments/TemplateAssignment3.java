@@ -213,7 +213,7 @@ public class TemplateAssignment3 {
         		
         		double t_test = Math.abs(avgCost1 - avgCost2) / (Math.sqrt(Math.pow(stDev1, 2) / simulationAmount + Math.pow(stDev2, 2) / simulationAmount));
         		
-        		if (t_test > val) {
+        		if (t_test < val) {
         			int[] coords = null;
         			if (this.outputs[i].values.average() < this.outputs[j].values.average()) {
         				coords[0] = this.outputs[i].xval;
