@@ -1,40 +1,38 @@
 package assignments;
 
 /**
- *
  * @author mctenthij
  */
 public class Accident {
-    private double arrivalTime;
+
+    private double arrivalTime; // when accident occurred
     private double startTime;
     private double completionTime;
     private double waitTime;
     private double serviceTime;
-    private double xLocation;
-    private double yLocation;
+    private double[] location;
     private int region;
 
-    public Accident(double arrivalTime, double xLocation, double yLocation, int region) {
-        //Record arrival time when creating a new customer
+    public Accident(double arrivalTime, double[] location, int region) {
         this.arrivalTime = arrivalTime;
         this.startTime = Double.NaN;
         this.completionTime = Double.NaN;
         this.waitTime = Double.NaN;
         this.serviceTime = Double.NaN;
-        this.xLocation = xLocation;
-        this.yLocation = yLocation;
+        this.location = location;
         this.region = region;
     }
-    
+
     public double[] getLocation() {
-        double[] result = new double[2];
-        result[0] = xLocation;
-        result[1] = yLocation;
-        return result;
+        return location;
     }
-    
+
     public int getRegion() {
         return region;
+    }
+
+    public double getArrivalTime() {
+    	return arrivalTime;
     }
     
     public double getServiceTime() {
@@ -45,18 +43,15 @@ public class Accident {
         return waitTime;
     }
 
-    //Call this method when the service for this
-    //customer started
-    public void serviceStarted(double current) {
-        this.startTime = current;
-        this.waitTime = current - this.arrivalTime;
+    // call this when the service starts
+    public void serviceStarted(double currentTime) {
+        this.startTime = currentTime;
+        this.waitTime = currentTime - this.arrivalTime;
     }
 
-    //Call this method when the service for this
-    //customer completed
-    public void completed(double current) {
-        this.completionTime = current;
-        this.serviceTime = current - this.startTime;
+    // call this when the service is completed
+    public void completed(double timeOfCompletion) {
+        this.completionTime = timeOfCompletion;
+        this.serviceTime = timeOfCompletion - this.startTime;
     }
-    
 }

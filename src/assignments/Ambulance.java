@@ -1,6 +1,5 @@
 package assignments;
 
-import assignments.TemplateAssignment2.Customer;
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
