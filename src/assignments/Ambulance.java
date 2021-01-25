@@ -41,7 +41,7 @@ public class Ambulance extends Event {
         accident.serviceStarted(arrivalTimeAtAccident);
         double serviceTimeAtScene = serviceTimeGen.nextDouble();
 
-        // SB: busyServing = processing time (exponential distribution with mu = 1) plus driving time to hospital from accident
+        // SB: busyServing = processing time (exponential distribution with mu = 1) plus driving time to hospital from accident, this sentence comes from assignment pdf
         double busyServing = serviceTimeGen.nextDouble() + this.drivingTimeToHospital(this.currentAccident); // calculate the time needed to process the accident and drive back to the base
         
         schedule(busyServing); // after busyServing it becomes idle again
