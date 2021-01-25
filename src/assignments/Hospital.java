@@ -40,6 +40,8 @@ public class Hospital {
 
 	public Hospital(int numAmbulances, double[] arrivalRates, double serviceRate, double stopTime, int numRegions, boolean serveOutsideBaseRegion, int[] ambulancePlacements) {
 
+		// set a seed for replication purposes
+		setSeed();
 		// set hospital variables
 		this.numAmbulances = numAmbulances;
 		ambulances = new Ambulance[numAmbulances];
@@ -51,21 +53,10 @@ public class Hospital {
 		this.ambulancePlacements = ambulancePlacements;
 
 		// create regions
-		for (int j = 0; j < numRegions; j++) {
-			double[] baseLocation = determineRegionLocation(j);
-			RandomStream arrivalRandomStream = getStream();
-			RandomStream locationRandomStream = getStream();
-			regions[j] = new Region(j, baseLocation, arrivalRandomStream, arrivalRates[j], locationRandomStream, regions, numRegions);
-		}
+		createRegions();
 
 		// create and assign ambulances to regions
-		for (int i = 0; i < numAmbulances; i++) {
-			int region = determineBaseRegion(i);
-			RandomStream serviceRandomStream = getStream();
-			Ambulance ambulance = new Ambulance(i, regions[region], serviceRandomStream, serviceRate, serveOutsideBaseRegion);
-			ambulances[i] = ambulance;
-			regions[region].idleAmbulances.add(ambulance); // initially the ambulance is idle
-		}
+		createAssignAmbulances(serveOutsideBaseRegion);
 
 		// create Tallies
 		waitTimeTally = new Tally("Waiting time");
@@ -79,7 +70,33 @@ public class Hospital {
 		listStatsTallies.add(withinTargetTally);
 	}
 
-    // returns region index to which the ambulance should be assigned
+	private void setSeed() {
+		// Set some seed for replication purposes
+		rng.setSeed(0);
+	}
+	
+    private void createRegions() {
+		// Create the regions when constructing Hospital object
+		for (int j = 0; j < numRegions; j++) {
+			double[] baseLocation = determineRegionLocation(j);
+			RandomStream arrivalRandomStream = getStream();
+			RandomStream locationRandomStream = getStream();
+			regions[j] = new Region(j, baseLocation, arrivalRandomStream, arrivalRates[j], locationRandomStream, regions, numRegions);
+		}
+	}
+    
+	private void createAssignAmbulances(boolean serveOutsideBaseRegion) {
+		// create and assign ambulances to regions
+		for (int i = 0; i < numAmbulances; i++) {
+			int region = determineBaseRegion(i);
+			RandomStream serviceRandomStream = getStream();
+			Ambulance ambulance = new Ambulance(i, regions[region], serviceRandomStream, serviceRate, serveOutsideBaseRegion);
+			ambulances[i] = ambulance;
+			regions[region].idleAmbulances.add(ambulance); // initially the ambulance is idle
+		}
+	}
+
+	// returns region index to which the ambulance should be assigned
     public int determineBaseRegion(int ambulanceNumber) {
         // this function must be adjusted
 
@@ -102,14 +119,28 @@ public class Hospital {
 
     // returns the location coordinates of the base of region j
     public double[] determineRegionLocation(int j) {
-
+    	// we interpret base as: centre
         // this function must be adjusted
+    	// ??? why base? (does base mean the centre, or the bottom coordinate)
+    	// this must be changed when working with more locations
+    	double[] location = naiveDetermineLocation(j);
 
-        double[] location = new double[2];
-        location[0] = 0.0; // X-Coordinate of accident location
-        location[1] = 0.0; // Y-Coordinate of accident location
+        
         return location;
     }
+
+	private double[] naiveDetermineLocation(int j) {
+		// Determine only the center location region (case: j = 0)
+        double[] location = naiveDetermineLocation(j);
+        if(j==0) {
+        	location[0] = 0.0; // X-Coordinate of centre location
+        	location[1] = 0.0; // Y-Coordinate of centre location
+        }
+        else
+        	location = null;
+        
+		return location;
+	}
 
 	public ListOfStatProbes simulateOneRun() {
 
@@ -166,18 +197,19 @@ public class Hospital {
 
         // hospital variables
 		int numAmbulances = 20;
-		int numRegions = 7;
 		double[] arrivalRates = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15}; // arrival rates per region
 		double serviceRate = 1.0;
 		double stopTime = 10000; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
 		
 		// simulate ambulance placement 0: only central region
+		int numRegions = 1;
 		// miscchien aanpassen, 20 is vrij veel misschien
 		int[] ambulancePlacements = {20, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
 		hospital.simulateOneRunAndReport();
 		
+		numRegions = 7; // reset number of regions
 		// simulate ambulance placement 1
 		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
 		hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
