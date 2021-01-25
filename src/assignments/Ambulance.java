@@ -5,106 +5,86 @@ import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
 import umontreal.ssj.simevents.Sim;
 import umontreal.ssj.stat.TallyStore;
+
 /**
- *
  * @author mctenthij
+ * Edited by qvanderkaaij and jberkhout
  */
 public class Ambulance extends Event {
-    Region baseRegion;
-    Accident currentCust; //Current customer in service
-    double responseTime = 15.0;
-    boolean serveOutsideRegion;
-    ExponentialGen serviceTimeGen;
-    TallyStore waitTimeTally = new TallyStore("Waittime");
-    TallyStore serviceTimeTally = new TallyStore("Servicetime");
-    TallyStore withinTargetTally = new TallyStore("Arrival within target");
-    
-    public Ambulance(Region baseRegion, RandomStream rng, double serviceTimeRate) {
-        currentCust = null;
-        this.baseRegion = baseRegion;
-        serviceTimeGen = new ExponentialGen(rng, serviceTimeRate);
-        serveOutsideRegion = false;
-    }
-    
-    public Ambulance(Region baseRegion, RandomStream rng, double serviceTimeRate, boolean outside) {
-        currentCust = null;
-        this.baseRegion = baseRegion;
-        serviceTimeGen = new ExponentialGen(rng, serviceTimeRate);
-        serveOutsideRegion = outside;
-    }
-    
-    public void serviceCompleted(Ambulance amb, Accident currentCust) {
-        // Process the completed `customer'
-    	// SB: are we here checking if the ambulance is within the target time (15)? 
-    	// SB: response time is the time between when the emergency call arrives and 
-    	// SB: when an ambulance arrives at the accident
-    	
-    	currentCust.completed(Sim.time());
-    	
-    	// SB: we need to find a value for the arriving emergency call and we can
-    	// SB: add that value on to drivingTimeToAccident()
-    	
-    	// SB: i'm not sure if amb.serviceTimeGen.nextDouble() is the value of the arriving emergency call
-    	double actualResponseTime = amb.serviceTimeGen.nextDouble() + drivingTimeToAccident(currentCust);
-    	
-    	if (actualResponseTime <= responseTime) {
-    		withinTargetTally.add(1);
-    	} else {
-    		withinTargetTally.add(0);
-    	}
-    	
-    	waitTimeTally.add(currentCust.getWaitTime());
-    	serviceTimeTally.add(currentCust.getServiceTime());
-    	
-    	// SB: update that the ambulance no longer serves a customer
-    	amb.currentCust = null;
-    	
-    	// SB: do we need here to update that the ambulance is driving back from the hospital to it's base.
+
+	// ambulance variables
+	int id;
+	Region baseRegion;
+	Accident currentAccident;
+	boolean servesOutsideRegion;
+	double drivingTimeHospitalToBase;
+
+	// RNG
+	ExponentialGen serviceTimeGen;
+
+	// stats counters
+	TallyStore waitTimeTally = new TallyStore("Waiting times");
+	TallyStore serviceTimeTally = new TallyStore("Service times");
+	TallyStore withinTargetTally = new TallyStore("Arrival within target");
+
+	public Ambulance(int id, Region baseRegion, RandomStream serviceRandomStream, double serviceRate, boolean servesOutsideRegion) {
+		this.id = id;
+		currentAccident = null;
+		this.baseRegion = baseRegion;
+		serviceTimeGen = new ExponentialGen(serviceRandomStream, serviceRate);
+		this.servesOutsideRegion = servesOutsideRegion;
+		this.drivingTimeHospitalToBase = drivingTimeHospitalToBase();
+	}
+
+    public void startService(Accident accident, double arrivalTimeAtAccident) {
+        currentAccident = accident;
+        accident.serviceStarted(arrivalTimeAtAccident);
+        double serviceTimeAtScene = serviceTimeGen.nextDouble();
+        double busyServing = 0.0; // calculate the time needed to process the accident and drive back to the base
+        schedule(busyServing); // after busyServing it becomes idle again
     }
 
+    public void serviceCompleted() {
+        // process the completed current accident: the ambulance brought the
+        // patient to the hospital and is back at its base, what next?
+    }
+    
+    private double euclideanDist(double[] first, double[] second) {
+    	double result = Math.sqrt(Math.pow(second[0] - first[0], 2) + Math.pow(second[1] - first[1], 2));
+        
+    	return result;
+    }
+
+    // return Euclidean distance between accident and hospital
     public double drivingTimeToAccident(Accident cust) {
-        // calculate the driving time from the base location of the ambulance to the accident location
+        // calculate the driving time from the baselocation of the ambulance to the accident location
     	double[] base = this.baseRegion.baseLocation;
-    	
     	double[] accidentBase = cust.getLocation();
     	
-    	double result = Math.sqrt(Math.pow((accidentBase[0] - base[0]), 2) + Math.pow((accidentBase[1] - base[1]), 2));
-    	
-        return result;
-    }
-    
-    public double drivingTimeToHostital(Accident cust) {
-        // calculate the driving time from accident location to the hospital
-    	/*
-    	double[] accidentBase = cust.getLocation();
-    	
-    	// SB: how can we access the location of the Hospital? 
-    	// SB: i don't think creating a new object will be the right solution
-    	
-    	double[] hospitalBase = new Hospital().determineRegionLocation(this.baseRegion.regionID);	// determineRegionLocation() needs to be updated
-    			
-    	double result = Math.sqrt(Math.pow((accidentBase[0] - hospitalBase[0]), 2) + Math.pow((accidentBase[1] - hospitalBase[1]), 2));
-    	*/
-    	
-    	// SB: is the baseLocation of the ambulance the same as the baseLocation of the hospital?
-    	// SB: if so, we can use drivingTimeToAccident() again to calculate the time/distance
-    	// SB: assumption based on sentence from assingment4.pdf "In total, the ambulance server has 20 ambulances that need to be placed at the waiting docks."
-    	
-        return drivingTimeToAccident(cust);
+    	return euclideanDist(base, accidentBase);
     }
 
+    // return Euclidean distance between accident and hospital
+    public double drivingTimeToHospital(Accident cust) {
+        // calculate the driving time from accident location to the hospital
+    	double[] accidentBase = cust.getLocation();
+    	double[] hospitalBase = null;	// need to find a way to retrieve the location of the hospital 
+        
+    	return euclideanDist(accidentBase, hospitalBase);
+    }
+
+	// return Euclidean distance from the hospital to the base
+	public double drivingTimeHospitalToBase() {
+        // calculate the driving time from the hospital to the base
+		double[] hospitalBase = null;	// need to find a way to retrieve the location of the hospital
+		double[] ambulanceBase = this.baseRegion.baseLocation;
+		
+		return euclideanDist(hospitalBase, ambulanceBase);
+	}
+
+    // event: the ambulance is back at its base after completing service
     @Override
     public void actions() {
-        serviceCompleted(this, currentCust);
-    }
-
-    public void startService(Accident cust, double current) {
-        currentCust = cust;
-        cust.serviceStarted(current);
-        
-        double serviceTime = serviceTimeGen.nextDouble();
-        double busyServing = 0.0; // Calculate the time needed to process the accident
-        
-        schedule(busyServing); //Schedule this event after serviceTime time units
+        serviceCompleted();
     }
 }
