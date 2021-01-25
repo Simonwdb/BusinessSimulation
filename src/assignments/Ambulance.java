@@ -40,16 +40,37 @@ public class Ambulance extends Event {
         currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident);
         double serviceTimeAtScene = serviceTimeGen.nextDouble();
+        
         double busyServing = 0.0; // calculate the time needed to process the accident and drive back to the base
+        
+        
         schedule(busyServing); // after busyServing it becomes idle again
     }
 
     public void serviceCompleted() {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
+    	this.currentAccident.completed(Sim.time());
+    	
+    	// SB: calculating the response time with arrival time of the accident and drivingTimeToAccident
+    	double actualResponseTime = this.currentAccident.getArrivalTime() + this.drivingTimeToAccident(this.currentAccident);
+    	
+    	if (actualResponseTime <= 15) {	// SB: how can we access the RESPONSE_TIME_TARGET in Hospital.java
+    		withinTargetTally.add(1);
+    	} else {
+    		withinTargetTally.add(0);
+    	}
+    	
+    	waitTimeTally.add(this.currentAccident.getWaitTime());
+    	serviceTimeTally.add(this.currentAccident.getServiceTime());
+    	
+    	// SB: Do we need to update in this function that the currentAccident is now null?
+    	this.currentAccident = null;
+    	
+    	// SB: Do we need to update that the ambulance is driving back from the hospital to their base?
     }
     
-    private double euclideanDist(double[] first, double[] second) {
+    private double euclideanDistance(double[] first, double[] second) {
     	double result = Math.sqrt(Math.pow(second[0] - first[0], 2) + Math.pow(second[1] - first[1], 2));
         
     	return result;
@@ -58,28 +79,28 @@ public class Ambulance extends Event {
     // return Euclidean distance between accident and hospital
     public double drivingTimeToAccident(Accident cust) {
         // calculate the driving time from the baselocation of the ambulance to the accident location
-    	double[] base = this.baseRegion.baseLocation;
+    	double[] ambulanceBase = this.baseRegion.baseLocation;
     	double[] accidentBase = cust.getLocation();
     	
-    	return euclideanDist(base, accidentBase);
+    	return euclideanDistance(ambulanceBase, accidentBase);
     }
 
     // return Euclidean distance between accident and hospital
     public double drivingTimeToHospital(Accident cust) {
         // calculate the driving time from accident location to the hospital
     	double[] accidentBase = cust.getLocation();
-    	double[] hospitalBase = null;	// need to find a way to retrieve the location of the hospital 
+    	double[] hospitalBase = null;	// SB: need to find a way to retrieve the location of the hospital 
         
-    	return euclideanDist(accidentBase, hospitalBase);
+    	return euclideanDistance(accidentBase, hospitalBase);
     }
 
 	// return Euclidean distance from the hospital to the base
 	public double drivingTimeHospitalToBase() {
         // calculate the driving time from the hospital to the base
-		double[] hospitalBase = null;	// need to find a way to retrieve the location of the hospital
+		double[] hospitalBase = null;	// SB: need to find a way to retrieve the location of the hospital
 		double[] ambulanceBase = this.baseRegion.baseLocation;
 		
-		return euclideanDist(hospitalBase, ambulanceBase);
+		return euclideanDistance(hospitalBase, ambulanceBase);
 	}
 
     // event: the ambulance is back at its base after completing service
