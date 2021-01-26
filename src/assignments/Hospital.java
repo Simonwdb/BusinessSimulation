@@ -134,11 +134,31 @@ public class Hospital {
 	private double[] naiveDetermineLocation(int j) {
 		// Determine only the center location region (case: j = 0)
         double[] location = new double[2];
-        if(j==0) {
+        
+        // SB: can't come up with a smart for loop to assign the locations
+        
+        if (j == 0) {
         	location[0] = 0.0; // X-Coordinate of centre location
         	location[1] = 0.0; // Y-Coordinate of centre location
-        }
-        else
+        } else if (j == 1) {
+        	location[0] = 0.0; 
+        	location[1] = -10.0;
+        } else if (j == 2) {
+        	location[0] = 10.0; 
+        	location[1] = -5.0;
+        } else if (j == 3) {
+        	location[0] = 10.0; 
+        	location[1] = 5.0;
+        } else if (j == 4) {
+        	location[0] = 0.0; 
+        	location[1] = 10.0;
+        } else if (j == 5) {
+        	location[0] = 5.0; 
+        	location[1] = -10.0;
+        } else if (j == 6) {
+        	location[0] = -5.0; 
+        	location[1] = -10.0;
+        } else
         	location = null; // we accepteren geen andere locaties dan de center locatie!!
         
 		return location;
