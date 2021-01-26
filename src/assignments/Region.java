@@ -45,7 +45,8 @@ public class Region {
     private void drawLocationsTest() {
 		// Testing method for sampling points inside hexagon
     	double[][] points = getTestLocationDrawingPoints();
-    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points);
+    	//double[][] boundaries = getTestLocationBoundaries();
+    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points, boundaries);
     	chart.setAutoRange00(true, true); // Axes pass through (0,0)
     	chart.view(800,500);
 
