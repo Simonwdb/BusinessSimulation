@@ -1,5 +1,7 @@
 package assignments;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.Random;
 
 import umontreal.ssj.rng.MRG32k3a;
@@ -131,13 +133,13 @@ public class Hospital {
 
 	private double[] naiveDetermineLocation(int j) {
 		// Determine only the center location region (case: j = 0)
-        double[] location = naiveDetermineLocation(j);
+        double[] location = new double[2];
         if(j==0) {
         	location[0] = 0.0; // X-Coordinate of centre location
         	location[1] = 0.0; // Y-Coordinate of centre location
         }
         else
-        	location = null;
+        	location = null; // we accepteren geen andere locaties dan de center locatie!!
         
 		return location;
 	}
@@ -209,6 +211,7 @@ public class Hospital {
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
 		hospital.simulateOneRunAndReport();
 		
+		/* Add this later
 		numRegions = 7; // reset number of regions
 		// simulate ambulance placement 1
 		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
@@ -221,6 +224,8 @@ public class Hospital {
 		hospital.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
+		
+		 */
     }
 
 	private void simulateOneRunAndReport() {

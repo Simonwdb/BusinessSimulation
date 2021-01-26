@@ -1,6 +1,10 @@
 package assignments;
 
 import java.util.LinkedList;
+
+import umontreal.ssj.charts.ScatterChart;
+import umontreal.ssj.charts.XYChart;
+import umontreal.ssj.charts.XYLineChart;
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
@@ -35,9 +39,33 @@ public class Region {
 		// set random streams
 		arrivalProcess = new ArrivalProcess(arrivalRandomStream, arrivalRate);
 		locationStream = locationRandomStream;
+		drawLocationsTest(); // test!
 	}
     
-    public void handleArrival() {
+    private void drawLocationsTest() {
+		// Testing method for sampling points inside hexagon
+    	double[][] points = getTestLocationDrawingPoints();
+    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points);
+    	chart.setAutoRange00(true, true); // Axes pass through (0,0)
+    	chart.view(800,500);
+
+	}
+
+	private double[][] getTestLocationDrawingPoints() {
+		// Get a lot of testpoints for the hexagon drawing
+		final int N = 10000;
+		// unfortunately, drawing points is flipped the other way round
+		double[][] points = new double[2][N];
+		for (int i = 0; i < N; i++) {
+			double[] cxy = drawLocation();
+			points[0][i] = cxy[0];
+			points[1][i] = cxy[1];
+		}
+		return points;
+
+	}
+
+	public void handleArrival() {
         // create and process a new accident
     	// SB: possible steps to be taken:
     	// 			- adding location to a new accident
@@ -52,19 +80,66 @@ public class Region {
 
     // returns a random location inside the region
     public double[] drawLocation() {
-    	// SB: i think we can use locationStream.nextInt(i, j), it will return an integer of random integers between i and j
-    	int i = 0;	// smallest integer that can be generated
-    	int j = 0;	// greatest integer that can be generated
-    	
-    	// SB: but how can we determine the bounds for i and j
-    	
-    	// determine the location of the accident
-        double[] location = new double[2];
-        location[0] = (double) locationStream.nextInt(i, j); // X-Coordinate of accident location
-        location[1] = (double) locationStream.nextInt(i, j); // Y-Coordinate of accident location
-        return location;
+    	// Draw a random point from the central hexagon
+    	double[] randomHexPoint = drawLocationHexCentre();
+    	// For abbreviation and clarity
+    	double X = randomHexPoint[0];
+    	double Y = randomHexPoint[1];
+    	double cx = baseLocation[0];
+    	double cy = baseLocation[1];
+    	// Scale this point to the current region, by translating according to centre
+    	double[] result = {(X+cx),(Y+cy)};
+    	return result;
     }
-    
+
+	private double[] drawLocationHexCentre() {
+		// Draw a random point from the central hexagon
+    	// Step 1. Pick one of the three rhombuses at random.
+    	double[][] vectorList = getAllSpanVectors();
+    	// Choose a rhombus index uniform randomly
+    	int irhom = chooseRandomRhombus();
+    	// get corresponding spanning vectors of the rhombus
+    	double[] svector1 = vectorList[irhom];
+    	// Account for overflow on the index (by adding 1 and modulo 3) for the other spanning vector
+    	int iv2 = (irhom+1)%3;
+    	double[] svector2 = vectorList[iv2];
+    	
+    	// abbreviate x and y values of the vectors v1,v2 that span up the rhombus chosen
+    	double v1_x = svector1[0];
+    	double v1_y = svector1[1];
+    	double v2_x = svector2[0];
+    	double v2_y = svector2[1];
+    	
+    	// Step 2. Pick a random point inside this rhombus
+    	// Scale the vectors by an Uniform random value to get a random point in the rhombus
+    	double A = locationStream.nextDouble();
+    	double B = locationStream.nextDouble();
+    	
+    	// Scale the spanning vectors by random values to obtain a random point in this rhombus
+    	double X = A*v1_x + B*v2_x;
+    	double Y = A*v1_y + B*v2_y;
+    	double[] result = {X,Y};
+    	return result;
+	}
+
+	private double[][] getAllSpanVectors() {
+		// Return three vectors spanning up the rhombuses (see report)
+		double ytop = 2.5 * Math.sqrt(3);
+		double ybottom = -ytop;
+		// create vectors, {x,y}
+		double[] vector0 = {-5,0};
+		double[] vector1 = {2.5,ytop};
+		double[] vector2 = {2.5,ybottom};
+		double[][] vectorlist = {vector0,vector1,vector2};
+		return vectorlist;
+	}
+	
+	private int chooseRandomRhombus() {
+		// Choose one of the three rhombuses in this hexagon (0, 1 or 2)
+		int result = locationStream.nextInt(0, 2);
+		return result;
+	}
+
 	class ArrivalProcess extends Event {
 
 		ExponentialGen arrivalTimeGen;
