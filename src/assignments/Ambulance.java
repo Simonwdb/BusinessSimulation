@@ -68,6 +68,9 @@ public class Ambulance extends Event {
     	this.currentAccident = null;
     	
     	// SB: Do we need to update that the ambulance is driving back from the hospital to their base?
+    	
+    	// SB: Do we need to update the ambulance to idle?
+    	
     }
     
     private double euclideanDistance(double[] first, double[] second) {
@@ -89,7 +92,7 @@ public class Ambulance extends Event {
     public double drivingTimeToHospital(Accident cust) {
         // calculate the driving time from accident location to the hospital
     	double[] accidentBase = cust.getLocation();
-    	double[] hospitalBase = null;	// SB: need to find a way to retrieve the location of the hospital 
+    	double[] hospitalBase = {0., 0.};	// SB: need to find a way to retrieve the location of the hospital 
         
     	return euclideanDistance(accidentBase, hospitalBase);
     }
@@ -97,7 +100,7 @@ public class Ambulance extends Event {
 	// return Euclidean distance from the hospital to the base
 	public double drivingTimeHospitalToBase() {
         // calculate the driving time from the hospital to the base
-		double[] hospitalBase = null;	// SB: need to find a way to retrieve the location of the hospital
+		double[] hospitalBase = {0., 0.};	// SB: need to find a way to retrieve the location of the hospital
 		double[] ambulanceBase = this.baseRegion.baseLocation;
 		
 		return euclideanDistance(hospitalBase, ambulanceBase);

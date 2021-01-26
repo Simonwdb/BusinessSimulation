@@ -39,16 +39,16 @@ public class Region {
 		// set random streams
 		arrivalProcess = new ArrivalProcess(arrivalRandomStream, arrivalRate);
 		locationStream = locationRandomStream;
-		drawLocationsTest(); // test!
+//		drawLocationsTest(); // test!
 	}
     
     private void drawLocationsTest() {
 		// Testing method for sampling points inside hexagon
     	double[][] points = getTestLocationDrawingPoints();
 //    	double[][] boundaries = getTestLocationBoundaries();
-    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points, boundaries);
-    	chart.setAutoRange00(true, true); // Axes pass through (0,0)
-    	chart.view(800,500);
+//    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points, boundaries);
+//    	chart.setAutoRange00(true, true); // Axes pass through (0,0)
+//    	chart.view(800,500);
 
 	}
 
@@ -77,6 +77,9 @@ public class Region {
     	//				- if not idle, append new created accident to queue
     	
     	// SB: am i missing some steps here? I think that's the way to handle an arrival?
+		
+		// SB: trying with the assumption that there always will be a idle ambulance
+	
     }
 
     // returns a random location inside the region
