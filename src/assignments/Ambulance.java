@@ -70,7 +70,7 @@ public class Ambulance extends Event {
     	// SB: Do we need to update that the ambulance is driving back from the hospital to their base?
     	
     	// SB: Do we need to update the ambulance to idle?
-    	
+    	baseRegion.idleAmbulances.add(this);
     }
     
     private double euclideanDistance(double[] first, double[] second) {
