@@ -79,7 +79,17 @@ public class Region {
     	// SB: am i missing some steps here? I think that's the way to handle an arrival?
 		
 		// SB: trying with the assumption that there always will be a idle ambulance
-	
+		double[] location = drawLocation();
+		double arrivalTime = arrivalProcess.arrivalRate;
+		Accident accident = new Accident(arrivalTime, location, this.regionID);
+		
+		for (int i = 0; i < this.idleAmbulances.size(); i++) {
+			Ambulance amb = this.idleAmbulances.remove(i);
+			double arrivalTimeAtAccident = amb.drivingTimeToAccident(accident);
+			amb.startService(accident, arrivalTimeAtAccident);
+			break;
+		}
+
     }
 
     // returns a random location inside the region
