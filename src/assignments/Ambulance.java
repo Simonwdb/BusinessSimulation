@@ -37,6 +37,9 @@ public class Ambulance extends Event {
 	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
+    	// SB: are we here removing the ambulance from the idle state?
+    	baseRegion.idleAmbulances.remove(this.id);
+    	
         currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident);
         double serviceTimeAtScene = serviceTimeGen.nextDouble();
