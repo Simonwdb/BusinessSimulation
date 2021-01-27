@@ -139,12 +139,31 @@ public class Hospital {
         double[] location = new double[2];
         double K = DIAMETER / 2;
         double r = (K * Math.sqrt(3)) / 2;
-        // SB: can't come up with a smart for loop to assign the locations
         
+        // SB: can't come up with a smart for loop to assign the locations
         if (j == 0) {
         	location[0] = 0.0; // X-Coordinate of centre location
         	location[1] = 0.0; // Y-Coordinate of centre location
-        } else
+        } else if (j == 1) {
+        	location[0] = 0.0;
+        	location[1] = -2 * r;
+        } else if (j == 2) {
+        	location[0] = 2 * K;
+        	location[1] = -1 * r;
+        } else if (j == 3) {
+        	location[0] = 2 * K;
+        	location[1] = r;
+        } else if (j == 4) {
+        	location[0] = 0.0;
+        	location[1] = 2 * K;
+        } else if (j == 5) {
+        	location[0] = -2 * K;
+        	location[1] = r;
+        } else if (j == 6) {
+        	location[0] = -2 * K;
+        	location[1] = -1 * r;
+        } 
+        else
         	location = null;
         
 		return location;
