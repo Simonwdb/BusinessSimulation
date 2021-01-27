@@ -39,16 +39,16 @@ public class Region {
 		// set random streams
 		arrivalProcess = new ArrivalProcess(arrivalRandomStream, arrivalRate);
 		locationStream = locationRandomStream;
-//		drawLocationsTest(); // test!
+		//drawLocationsTest(); // test!
 	}
     
     private void drawLocationsTest() {
 		// Testing method for sampling points inside hexagon
     	double[][] points = getTestLocationDrawingPoints();
-//    	double[][] boundaries = getTestLocationBoundaries();
-//    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points, boundaries);
-//    	chart.setAutoRange00(true, true); // Axes pass through (0,0)
-//    	chart.view(800,500);
+    	//double[][] boundaries = getTestLocationBoundaries();
+    	XYChart chart = new ScatterChart("Test Hexagon", "X", "Y", points);
+    	chart.setAutoRange00(true, true); // Axes pass through (0,0)
+    	chart.view(800,500);
 
 	}
 
@@ -83,13 +83,13 @@ public class Region {
 		double arrivalTime = arrivalProcess.arrivalRate;
 		Accident accident = new Accident(arrivalTime, location, this.regionID);
 		
-		for (int i = 0; i < this.idleAmbulances.size(); i++) {
-			Ambulance amb = this.idleAmbulances.remove(i);
+		Ambulance amb = this.idleAmbulances.pollFirst();
+		if(amb == null)
+			System.out.println("No idle ambulances left! Error!");
+		else {
 			double arrivalTimeAtAccident = amb.drivingTimeToAccident(accident);
 			amb.startService(accident, arrivalTimeAtAccident);
-			break;
 		}
-
     }
 
     // returns a random location inside the region
