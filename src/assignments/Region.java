@@ -83,6 +83,13 @@ public class Region {
 		double arrivalTime = arrivalProcess.arrivalRate;
 		Accident accident = new Accident(arrivalTime, location, this.regionID);
 		
+		// 27-01 addition
+		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
+		if (this.queue.size() > 0) {
+			this.queue.add(accident);
+			accident = this.queue.pollFirst();
+		}
+		
 		Ambulance amb = this.idleAmbulances.pollFirst();
 		if(amb == null)
 			System.out.println("No idle ambulances left! Error!");
@@ -99,8 +106,8 @@ public class Region {
     	// For abbreviation and clarity
     	double X = randomHexPoint[0];
     	double Y = randomHexPoint[1];
-    	double cx = baseLocation[0];
-    	double cy = baseLocation[1];
+    	double cx = this.baseLocation[0];
+    	double cy = this.baseLocation[1];
     	// Scale this point to the current region, by translating according to centre
     	double[] result = {(X+cx),(Y+cy)};
     	return result;
