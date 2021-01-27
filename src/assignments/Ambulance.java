@@ -1,5 +1,7 @@
 package assignments;
 
+import java.awt.geom.Point2D;
+
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
@@ -74,7 +76,13 @@ public class Ambulance extends Event {
     }
     
     private double euclideanDistance(double[] first, double[] second) {
-    	double result = Math.sqrt(Math.pow(second[0] - first[0], 2) + Math.pow(second[1] - first[1], 2));
+    	double x1 = first[0];
+    	double y1 = first[1];
+    	double x2 = second[0];
+    	double y2 = second[1];
+    	// New, faster method
+    	double result = Point2D.distance(x1, y1, x2, y2);
+    	//double result = Math.sqrt(Math.pow(second[0] - first[0], 2) + Math.pow(second[1] - first[1], 2)); old
         
     	return result;
     }
