@@ -41,7 +41,7 @@ public class Ambulance extends Event {
     public void startService(Accident accident, double arrivalTimeAtAccident) {
         currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident);
-        double serviceTimeAtScene = serviceTimeGen.nextDouble();
+        double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
 
         // SB: busyServing = processing time (exponential distribution with mu = 1) plus driving time to hospital from accident, this sentence comes from assignment pdf
         double busyServing = serviceTimeGen.nextDouble() + this.drivingTimeToHospital(this.currentAccident); // calculate the time needed to process the accident and drive back to the base
@@ -56,8 +56,7 @@ public class Ambulance extends Event {
     	
     	// SB: calculating the response time with arrival time of the accident and drivingTimeToAccident
     	double actualResponseTime = this.currentAccident.getArrivalTime() + this.drivingTimeToAccident(this.currentAccident);
-    	
-    	if (actualResponseTime <= 15) {	// SB: how can we access the RESPONSE_TIME_TARGET in Hospital.java
+    	if (actualResponseTime <= Hospital.RESPONSE_TIME_TARGET) {	// Check if response time is below or above target
     		withinTargetTally.add(1);
     	} else {
     		withinTargetTally.add(0);

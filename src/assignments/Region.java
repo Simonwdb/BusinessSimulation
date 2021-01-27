@@ -87,7 +87,7 @@ public class Region {
 		if(amb == null)
 			System.out.println("No idle ambulances left! Error!");
 		else {
-			double arrivalTimeAtAccident = amb.drivingTimeToAccident(accident);
+			double arrivalTimeAtAccident = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 			amb.startService(accident, arrivalTimeAtAccident);
 		}
     }
