@@ -148,19 +148,19 @@ public class Hospital {
         	location[0] = 0.0;
         	location[1] = -2 * r;
         } else if (j == 2) {
-        	location[0] = 2 * K;
+        	location[0] = 1.5 * K;
         	location[1] = -1 * r;
         } else if (j == 3) {
-        	location[0] = 2 * K;
+        	location[0] = 1.5 * K;
         	location[1] = r;
         } else if (j == 4) {
         	location[0] = 0.0;
-        	location[1] = 2 * K;
+        	location[1] = 1.5 * K;
         } else if (j == 5) {
-        	location[0] = -2 * K;
+        	location[0] = -1.5 * K;
         	location[1] = r;
         } else if (j == 6) {
-        	location[0] = -2 * K;
+        	location[0] = -1.5 * K;
         	location[1] = -1 * r;
         } 
         else

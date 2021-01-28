@@ -85,10 +85,10 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
-		System.out.println("New accident appeared! At:");
-		System.out.println("Region: " + this.regionID);
-		System.out.println("Location: " + Arrays.toString(location));
-		System.out.println("Time (Sim): " + currTime);
+//		System.out.println("New accident appeared! At:");
+//		System.out.println("Region: " + this.regionID);
+//		System.out.println("Location: " + Arrays.toString(location));
+//		System.out.println("Time (Sim): " + currTime);
 		
 		
 		// 27-01 addition
@@ -100,7 +100,7 @@ public class Region {
 		if(noAmbAvailable) {
 			this.queue.add(accident);	
 //			queueAccident(accident);	SB: hiervoor hoeft toch geen aparte method voor aangemaakt te worden? Dit lijkt mij enigzins overbodig
-			System.out.println("No Ambulances available, so added to the queue.");
+//			System.out.println("No Ambulances available, so added to the queue.");
 		}
 		else 
 			handleAccident(amb,accident);
@@ -122,14 +122,14 @@ public class Region {
     
 	private void handleAccident(Ambulance amb, Accident accident) {
 		// Handle this accident with this ambulance directly!
-		System.out.println("Handling Accident of location " + Arrays.toString(accident.getLocation()));
-		System.out.println("With ambulance " + amb.id);
+//		System.out.println("Handling Accident of location " + Arrays.toString(accident.getLocation()));
+//		System.out.println("With ambulance " + amb.id);
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
-		System.out.println("DrivingTime: " + drivingTime);
+//		System.out.println("DrivingTime: " + drivingTime);
 		double currTime = accident.getArrivalTime();
-		System.out.println("CurrTime: " + currTime);
+//		System.out.println("CurrTime: " + currTime);
 		double arrivalTimeAtAccident = drivingTime + currTime;
-		System.out.println("ArrTime: " + arrivalTimeAtAccident);
+//		System.out.println("ArrTime: " + arrivalTimeAtAccident);
 		amb.startService(accident, arrivalTimeAtAccident);
 	}
 
