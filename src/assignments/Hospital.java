@@ -140,7 +140,7 @@ public class Hospital {
         double K = DIAMETER / 2;
         double r = (K * Math.sqrt(3)) / 2;
         
-        // SB: can't come up with a smart for loop to assign the locations
+        // SB: can't come up with a smart for loop to assign the locations. TO: klopt, mag je hardcoden!
         if (j == 0) {
         	location[0] = 0.0; // X-Coordinate of centre location
         	location[1] = 0.0; // Y-Coordinate of centre location
@@ -183,8 +183,10 @@ public class Hospital {
 		new StopEvent().schedule(stopTime); // schedule stopping time
 
 		// start simulation
+		System.out.println("START SIMULATION");
 		Sim.start();
-
+		System.out.println("END SIMULATION");
+		// TODO: check: Wordt dit pas gedaan nadat de sim klaar is??
 		// combine results in the Hospital tallies : aparte methode van maken
 		for (int k = 0; k < numAmbulances; k++) {
 			for (double obs: ambulances[k].serviceTimeTally.getArray()) {

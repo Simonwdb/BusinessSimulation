@@ -39,20 +39,28 @@ public class Ambulance extends Event {
 	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
+    	System.out.println("Starting service with Ambulance" + this.id);
         currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
+        System.out.println("Time: " + arrivalTimeAtAccident);
         double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
-
+        System.out.println("Service Time: " + serviceTimeAtScene);
+        // should we notify that the accident person is now picked up?
         // SB: busyServing = processing time (exponential distribution with mu = 1) plus driving time to hospital from accident, this sentence comes from assignment pdf
-        double busyServing = serviceTimeGen.nextDouble() + this.drivingTimeToHospital(this.currentAccident); // calculate the time needed to process the accident and drive back to the base
-        
+        double drivingTimeBack = this.drivingTimeToHospital(this.currentAccident);
+        System.out.println("Driving Time Back: " + drivingTimeBack);
+        double busyServing = serviceTimeAtScene + drivingTimeBack; // calculate the time needed to process the accident and drive back to the base
+        System.out.println("Completion in minutes over: " + busyServing);
         schedule(busyServing); // after busyServing it becomes idle again
     }
 
     public void serviceCompleted() {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
-    	this.currentAccident.completed(Sim.time());
+    	double currTime = Sim.time(); // dit klopt niet gek genoeg
+    	this.currentAccident.completed(currTime);
+    	System.out.println("Service completed for ambulance: " + this.id);
+    	System.out.println("Time: " + currTime);
     	
     	// SB: calculating the response time with arrival time of the accident and drivingTimeToAccident
     	double actualResponseTime = this.currentAccident.getArrivalTime() + this.drivingTimeToAccident(this.currentAccident);
@@ -96,9 +104,9 @@ public class Ambulance extends Event {
     }
 
     // return Euclidean distance between accident and hospital
-    public double drivingTimeToHospital(Accident cust) {
+    public double drivingTimeToHospital(Accident acc) {
         // calculate the driving time from accident location to the hospital
-    	double[] accidentBase = cust.getLocation();
+    	double[] accidentBase = acc.getLocation();
     	double[] hospitalBase = {0., 0.};	// SB: need to find a way to retrieve the location of the hospital 
         
     	return euclideanDistance(accidentBase, hospitalBase);

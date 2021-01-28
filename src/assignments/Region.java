@@ -1,5 +1,6 @@
 package assignments;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import umontreal.ssj.charts.ScatterChart;
@@ -84,6 +85,11 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
+		System.out.println("New accident appeared! At:");
+		System.out.println("Region: " + this.regionID);
+		System.out.println("Location: " + Arrays.toString(location));
+		System.out.println("Time: " + currTime);
+		
 		
 		// 27-01 addition
 		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
@@ -91,14 +97,17 @@ public class Region {
 		// By service complete pas vanaf de queue halen
 		Ambulance amb = getAmbulanceAvailable();
 		boolean noAmbAvailable = (amb == null);
-		if(noAmbAvailable)
+		if(noAmbAvailable) {
 			queueAccident(accident);
+			System.out.println("No Ambulances available, so added to the queue.");
+		}
 		else 
 			handleAccident(amb,accident);
     }
 
 	private Ambulance getAmbulanceAvailable() {
 		// Check if there are ambulances available to process this accident, if yes retrieve it!
+		// TODO: als andere regios mogen helpen, moet deze methode dat ook regelen!
     	Ambulance result = this.idleAmbulances.pollFirst();
     	return result;
     	// NB! TODO: this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
@@ -112,9 +121,14 @@ public class Region {
     
 	private void handleAccident(Ambulance amb, Accident accident) {
 		// Handle this accident with this ambulance directly!
+		System.out.println("Handling Accident of location " + Arrays.toString(accident.getLocation()));
+		System.out.println("With ambulance " + amb.id);
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
+		System.out.println("DrivingTime: " + drivingTime);
 		double currTime = Sim.time();
+		System.out.println("CurrTime: " + currTime);
 		double arrivalTimeAtAccident = drivingTime + currTime;
+		System.out.println("ArrTime: " + arrivalTimeAtAccident);
 		amb.startService(accident, arrivalTimeAtAccident);
 	}
 
