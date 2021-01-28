@@ -252,7 +252,7 @@ public class Hospital {
 		int numAmbulances = 20;
 		double[] arrivalRates = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15}; // arrival rates per region
 		double serviceRate = 1.0;
-		double stopTime = 50; // simulation endtime (minutes)
+		double stopTime = 20; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
 		
 		// simulate ambulance placement 0: only central region

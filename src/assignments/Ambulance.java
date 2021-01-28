@@ -40,30 +40,43 @@ public class Ambulance extends Event {
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
     	// arr time accident klopt niet??? sim time lijkt niet geupdate te worden!!
-    	System.out.println("Starting service with Ambulance " + this.id);
         currentAccident = accident;
-        accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
+        
+        
+        // 28-01 SB: we roepen hier Sim.time(), maar gebruiken deze verder niet?
         double currSimTime = Sim.time();
+        
         double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
         // should we notify that the accident person is now picked up?
         double drivingTimeBack = this.drivingTimeToHospital(this.currentAccident);
         double busyServing = serviceTimeAtScene + drivingTimeBack; // calculate the time needed to process the accident and drive back to the base
+        System.out.println("Ambulance.startService method: sim.time() is: " + currSimTime + ", service time at scene is: " + serviceTimeAtScene + 
+        					", driving to hospital time is: " + drivingTimeBack + ", busy serving time is: " + busyServing + "\n");	
+        accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
         schedule(busyServing); // after busyServing it becomes idle again
+        // SB: i think this method is correct
     }
 
     public void serviceCompleted() {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
     	double currTime = Sim.time(); // dit klopt niet gek genoeg
-    	this.currentAccident.completed(currTime);
+    	
     	
     	// SB: calculating the response time with arrival time of the accident and drivingTimeToAccident
-    	double actualResponseTime = this.currentAccident.getArrivalTime() + this.drivingTimeToAccident(this.currentAccident);
+    	double arrivalTime = this.currentAccident.getArrivalTime();
+    	double drivingTimeToAccident = this.drivingTimeToAccident(this.currentAccident);
+    	double actualResponseTime =  arrivalTime + drivingTimeToAccident;
     	if (actualResponseTime <= Hospital.RESPONSE_TIME_TARGET) {	// Check if response time is below or above target
     		withinTargetTally.add(1);
     	} else {
     		withinTargetTally.add(0);
     	}
+    	
+    	System.out.println("Ambulance.serviceCompleted method: sim.time() is: " + currTime + ", arrivalTime is: " + arrivalTime + ", drivingTimeToAccident is: " + drivingTimeToAccident
+    						+ ", actualResponseTime is: " + actualResponseTime + "\n");
+    	
+    	this.currentAccident.completed(currTime);
     	
     	waitTimeTally.add(this.currentAccident.getWaitTime());
     	serviceTimeTally.add(this.currentAccident.getServiceTime());

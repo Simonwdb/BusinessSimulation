@@ -75,7 +75,7 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
-		System.out.println("new accident at location: [" + location[0] + ", " + location[1] +"] with time: " + currTime);
+		System.out.println("Region.handleArrival method:new accident at location: [" + location[0] + ", " + location[1] +"] with time: " + currTime + "\n");
 		
 		
 		// 27-01 addition
@@ -111,7 +111,8 @@ public class Region {
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 		double currTime = accident.getArrivalTime();
 		double arrivalTimeAtAccident = drivingTime + currTime;
-		System.out.println("Driving time to accident is: " + drivingTime + ", accident.getArrivalTime() is: " + currTime + ", service started with time: " + arrivalTimeAtAccident);
+		System.out.println("Region.handleAccident method: Driving time to accident is: " + drivingTime + ", accident.getArrivalTime() is: " + currTime + 
+							", service started with time: " + arrivalTimeAtAccident + "\n");
 		amb.startService(accident, arrivalTimeAtAccident);
 		// SB: i think this method is correct and doesn't need to be changed
 	}
