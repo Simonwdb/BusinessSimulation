@@ -157,7 +157,7 @@ public class Hospital {
 		return location;
     }
 
-    // SB: redudant method
+    // SB: redundant method
 	private double[] naiveDetermineLocation(int j) {
 		// Determine only the center location region (case: j = 0)
         double[] location = new double[2];
@@ -252,7 +252,7 @@ public class Hospital {
 		int numAmbulances = 20;
 		double[] arrivalRates = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15}; // arrival rates per region
 		double serviceRate = 1.0;
-		double stopTime = 10000; // simulation endtime (minutes)
+		double stopTime = 100; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
 		
 		// simulate ambulance placement 0: only central region

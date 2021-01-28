@@ -69,6 +69,22 @@ public class Region {
 	}
 
 	public void handleArrival() {
+		// SB: een versimpelde versie geschreven
+		double[] location = drawLocation();
+		double arrivalTime = arrivalProcess.arrivalRate;
+		Accident accident = new Accident(arrivalTime, location, this.regionID);
+		
+		Ambulance amb = this.idleAmbulances.pollFirst();
+		if (amb == null) {
+			this.queue.add(accident);
+		} else {
+			double arrivalAccident = amb.drivingTimeToAccident(accident) + arrivalTime;
+			amb.startService(accident, arrivalAccident);
+		}
+		
+		
+		
+		/*
         // create and process a new accident
     	// SB: possible steps to be taken:
     	// 			- adding location to a new accident
@@ -100,10 +116,11 @@ public class Region {
 		if(noAmbAvailable) {
 			this.queue.add(accident);	
 //			queueAccident(accident);	SB: hiervoor hoeft toch geen aparte method voor aangemaakt te worden? Dit lijkt mij enigzins overbodig
-//			System.out.println("No Ambulances available, so added to the queue.");
+			System.out.println("No Ambulances available, so added to the queue.");
 		}
 		else 
 			handleAccident(amb,accident);
+			*/
     }
 
 	private Ambulance getAmbulanceAvailable() {
@@ -122,7 +139,7 @@ public class Region {
     
 	private void handleAccident(Ambulance amb, Accident accident) {
 		// Handle this accident with this ambulance directly!
-//		System.out.println("Handling Accident of location " + Arrays.toString(accident.getLocation()));
+		System.out.println("Handling Accident of location " + Arrays.toString(accident.getLocation()));
 //		System.out.println("With ambulance " + amb.id);
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 //		System.out.println("DrivingTime: " + drivingTime);

@@ -91,9 +91,8 @@ public class Ambulance extends Event {
     	double y1 = first[1];
     	double x2 = second[0];
     	double y2 = second[1];
-    	// New, faster method
+
     	double result = Point2D.distance(x1, y1, x2, y2);
-    	//double result = Math.sqrt(Math.pow(second[0] - first[0], 2) + Math.pow(second[1] - first[1], 2)); old
         
     	return result;
     }
