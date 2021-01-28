@@ -98,7 +98,8 @@ public class Region {
 		Ambulance amb = getAmbulanceAvailable();
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
-			queueAccident(accident);
+			this.queue.add(accident);	
+//			queueAccident(accident);	SB: hiervoor hoeft toch geen aparte method voor aangemaakt te worden? Dit lijkt mij enigzins overbodig
 			System.out.println("No Ambulances available, so added to the queue.");
 		}
 		else 
