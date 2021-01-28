@@ -39,10 +39,13 @@ public class Ambulance extends Event {
 	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
+    	// arr time accident klopt niet??? sim time lijkt niet geupdate te worden!!
     	System.out.println("Starting service with Ambulance" + this.id);
         currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
         System.out.println("Time: " + arrivalTimeAtAccident);
+        double currSimTime = Sim.time();
+        System.out.println("Time according to Sim: " + currSimTime);
         double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
         System.out.println("Service Time: " + serviceTimeAtScene);
         // should we notify that the accident person is now picked up?
@@ -51,6 +54,7 @@ public class Ambulance extends Event {
         System.out.println("Driving Time Back: " + drivingTimeBack);
         double busyServing = serviceTimeAtScene + drivingTimeBack; // calculate the time needed to process the accident and drive back to the base
         System.out.println("Completion in minutes over: " + busyServing);
+        System.out.println("So that would be time: " + (busyServing + arrivalTimeAtAccident));
         schedule(busyServing); // after busyServing it becomes idle again
     }
 
