@@ -124,16 +124,40 @@ public class Hospital {
 
     // returns the location coordinates of the base of region j
     public double[] determineRegionLocation(int j) {
-    	// we interpret base as: centre
-        // this function must be adjusted
-    	// ??? why base? (does base mean the centre, or the bottom coordinate)
-    	// this must be changed when working with more locations
-    	double[] location = naiveDetermineLocation(j);
-
+		// Determine only the center location region (case: j = 0)
+        double[] location = new double[2];
+        double K = DIAMETER / 2;
+        double r = (K * Math.sqrt(3)) / 2;
         
-        return location;
+        if (j == 0) {
+        	location[0] = 0.0; 
+        	location[1] = 0.0;
+        } else if (j == 1) {
+        	location[0] = 0.0;
+        	location[1] = -2 * r;
+        } else if (j == 2) {
+        	location[0] = 1.5 * K;
+        	location[1] = -1 * r;
+        } else if (j == 3) {
+        	location[0] = 1.5 * K;
+        	location[1] = r;
+        } else if (j == 4) {
+        	location[0] = 0.0;
+        	location[1] = 1.5 * K;
+        } else if (j == 5) {
+        	location[0] = -1.5 * K;
+        	location[1] = r;
+        } else if (j == 6) {
+        	location[0] = -1.5 * K;
+        	location[1] = -1 * r;
+        } 
+        else
+        	location = null;
+        
+		return location;
     }
 
+    // SB: redudant method
 	private double[] naiveDetermineLocation(int j) {
 		// Determine only the center location region (case: j = 0)
         double[] location = new double[2];
