@@ -114,7 +114,7 @@ public class Region {
 		System.out.println("Region.handleAccident method: Driving time to accident is: " + drivingTime + ", accident.getArrivalTime() is: " + currTime + 
 							", service started with time: " + arrivalTimeAtAccident + "\n");
 		amb.startService(accident, arrivalTimeAtAccident);
-		// SB: i think this method is correct and doesn't need to be changed
+		// 28-01 SB: is het mogelijk om vanuit hier de sim.time() up te daten? dat is wat hier nog ontbreekt lijkt me
 	}
 
 	// returns a random location inside the region

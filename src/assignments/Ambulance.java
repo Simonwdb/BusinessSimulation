@@ -44,13 +44,13 @@ public class Ambulance extends Event {
         
         
         // 28-01 SB: we roepen hier Sim.time(), maar gebruiken deze verder niet?
-        double currSimTime = Sim.time();
+//        double currSimTime = Sim.time();
         
         double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
         // should we notify that the accident person is now picked up?
         double drivingTimeBack = this.drivingTimeToHospital(this.currentAccident);
         double busyServing = serviceTimeAtScene + drivingTimeBack; // calculate the time needed to process the accident and drive back to the base
-        System.out.println("Ambulance.startService method: sim.time() is: " + currSimTime + ", service time at scene is: " + serviceTimeAtScene + 
+        System.out.println("Ambulance.startService method: service time at scene is: " + serviceTimeAtScene + 
         					", driving to hospital time is: " + drivingTimeBack + ", busy serving time is: " + busyServing + "\n");	
         accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
         schedule(busyServing); // after busyServing it becomes idle again
