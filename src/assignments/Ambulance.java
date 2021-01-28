@@ -40,7 +40,7 @@ public class Ambulance extends Event {
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
         currentAccident = accident;
-        accident.serviceStarted(arrivalTimeAtAccident);
+        accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
         double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
 
         // SB: busyServing = processing time (exponential distribution with mu = 1) plus driving time to hospital from accident, this sentence comes from assignment pdf

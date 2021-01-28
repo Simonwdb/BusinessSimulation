@@ -8,6 +8,7 @@ import umontreal.ssj.charts.XYLineChart;
 import umontreal.ssj.randvar.ExponentialGen;
 import umontreal.ssj.rng.RandomStream;
 import umontreal.ssj.simevents.Event;
+import umontreal.ssj.simevents.Sim;
 
 /**
  * @author A van Oostveen
@@ -79,27 +80,45 @@ public class Region {
     	// SB: am i missing some steps here? I think that's the way to handle an arrival?
 		
 		// SB: trying with the assumption that there always will be a idle ambulance
+		// Get current accident
+		double currTime = Sim.time();
 		double[] location = drawLocation();
-		double arrivalTime = arrivalProcess.arrivalRate;
-		Accident accident = new Accident(arrivalTime, location, this.regionID);
+		Accident accident = new Accident(currTime, location, this.regionID);
 		
 		// 27-01 addition
 		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
-		if (this.queue.size() > 0) {
-			this.queue.add(accident);
-			accident = this.queue.pollFirst();
-		}
-		
-		Ambulance amb = this.idleAmbulances.pollFirst();
-		if(amb == null)
-			System.out.println("No idle ambulances left! Error!");
-		else {
-			double arrivalTimeAtAccident = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
-			amb.startService(accident, arrivalTimeAtAccident);
-		}
+		// Allen idle ambulances vanuit de centrale kunnen helpen.
+		// By service complete pas vanaf de queue halen
+		Ambulance amb = getAmbulanceAvailable();
+		boolean noAmbAvailable = (amb == null);
+		if(noAmbAvailable)
+			queueAccident(accident);
+		else 
+			handleAccident(amb,accident);
     }
 
-    // returns a random location inside the region
+	private Ambulance getAmbulanceAvailable() {
+		// Check if there are ambulances available to process this accident, if yes retrieve it!
+    	Ambulance result = this.idleAmbulances.pollFirst();
+    	return result;
+    	// NB! TODO: this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
+	}
+	
+
+    private void queueAccident(Accident accident) {
+		// Store the accident in the queue, so it can be helped later, when an ambulance is available
+    	this.queue.add(accident);
+	}
+    
+	private void handleAccident(Ambulance amb, Accident accident) {
+		// Handle this accident with this ambulance directly!
+		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
+		double currTime = Sim.time();
+		double arrivalTimeAtAccident = drivingTime + currTime;
+		amb.startService(accident, arrivalTimeAtAccident);
+	}
+
+	// returns a random location inside the region
     public double[] drawLocation() {
     	// Draw a random point from the central hexagon
     	double[] randomHexPoint = drawLocationHexCentre();

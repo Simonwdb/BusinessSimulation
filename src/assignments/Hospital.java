@@ -185,7 +185,7 @@ public class Hospital {
 		// start simulation
 		Sim.start();
 
-		// combine results in the Hospital tallies
+		// combine results in the Hospital tallies : aparte methode van maken
 		for (int k = 0; k < numAmbulances; k++) {
 			for (double obs: ambulances[k].serviceTimeTally.getArray()) {
 				serviceTimeTally.add(obs);
