@@ -88,7 +88,7 @@ public class Region {
 		System.out.println("New accident appeared! At:");
 		System.out.println("Region: " + this.regionID);
 		System.out.println("Location: " + Arrays.toString(location));
-		System.out.println("Time: " + currTime);
+		System.out.println("Time (Sim): " + currTime);
 		
 		
 		// 27-01 addition
@@ -125,7 +125,7 @@ public class Region {
 		System.out.println("With ambulance " + amb.id);
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 		System.out.println("DrivingTime: " + drivingTime);
-		double currTime = Sim.time();
+		double currTime = accident.getArrivalTime();
 		System.out.println("CurrTime: " + currTime);
 		double arrivalTimeAtAccident = drivingTime + currTime;
 		System.out.println("ArrTime: " + arrivalTimeAtAccident);
