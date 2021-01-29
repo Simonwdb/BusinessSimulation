@@ -50,8 +50,8 @@ public class Ambulance extends Event {
         // should we notify that the accident person is now picked up?
         double drivingTimeBack = this.drivingTimeToHospital(this.currentAccident);
         double busyServing = serviceTimeAtScene + drivingTimeBack; // calculate the time needed to process the accident and drive back to the base
-        System.out.println("Ambulance.startService method: service time at scene is: " + serviceTimeAtScene + 
-        					", driving to hospital time is: " + drivingTimeBack + ", busy serving time is: " + busyServing + "\n");	
+        System.out.println("Ambulance.startService method: \n service time at scene is: " + serviceTimeAtScene + 
+        					", \n driving to hospital time is: " + drivingTimeBack + ", \n busy serving time is: " + busyServing + "\n");	
         accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
         schedule(busyServing); // after busyServing it becomes idle again
         // SB: i think this method is correct
@@ -73,8 +73,8 @@ public class Ambulance extends Event {
     		withinTargetTally.add(0);
     	}
     	
-    	System.out.println("Ambulance.serviceCompleted method: sim.time() is: " + currTime + ", arrivalTime is: " + arrivalTime + ", drivingTimeToAccident is: " + drivingTimeToAccident
-    						+ ", actualResponseTime is: " + actualResponseTime + "\n");
+    	System.out.println("Ambulance.serviceCompleted method: \n currTime/sim.time() is: " + currTime + ", \n arrivalTime is: " + arrivalTime + ", \n drivingTimeToAccident is: " + drivingTimeToAccident
+    						+ ", \n actualResponseTime is: " + actualResponseTime + "\n");
     	
     	this.currentAccident.completed(currTime);
     	

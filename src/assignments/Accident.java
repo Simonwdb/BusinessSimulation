@@ -47,13 +47,13 @@ public class Accident {
     public void serviceStarted(double currentTime) {
         this.startTime = currentTime;
         this.waitTime = currentTime - this.arrivalTime;
-        System.out.println("Accident.serviceStarted method: this.startTime is: " + currentTime + ", this.arrivalTime is: " + this.arrivalTime + ", this.waitTime is: " + this.waitTime + "\n");
+        System.out.println("Accident.serviceStarted method: \n this.startTime is: " + currentTime + ", \n this.arrivalTime is: " + this.arrivalTime + ", \n this.waitTime is: " + this.waitTime + "\n");
     }
 
     // call this when the service is completed
     public void completed(double timeOfCompletion) {
         this.completionTime = timeOfCompletion;
         this.serviceTime = timeOfCompletion - this.startTime;
-        System.out.println("Accident.completed method: this.completionTime is: " + timeOfCompletion + ", this.startTime is: " + this.startTime + ", this.serviceTime is: " + this.serviceTime + "\n");
+        System.out.println("Accident.completed method: \n this.completionTime is: " + timeOfCompletion + ", \n this.startTime is: " + this.startTime + ", \n this.serviceTime is: " + this.serviceTime + "\n");
     }
 }
