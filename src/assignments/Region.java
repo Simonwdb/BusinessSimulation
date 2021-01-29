@@ -75,6 +75,7 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
+		// DEBUG
     	System.out.println("NEW ACCIDENT");
 		System.out.println("Region.handleArrival method:");
 		System.out.println("SIM TIME START: " + currTime);
