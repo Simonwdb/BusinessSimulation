@@ -87,7 +87,7 @@ public class Ambulance extends Event {
         // patient to the hospital and is back at its base, what next?
     	double currTime = Sim.time(); // dit klopt eindelijk!
     	System.out.println("Service complete for Ambulance " + this.id);
-    	System.out.println("Ambulance.serviceCompleted method: \n completionTime/currTime/sim.time() is: " + currTime);
+    	System.out.println("SIM TIME END/completionTime/currTime is: " + currTime);
     	System.out.println("This should be equal to: Acc. Arrival time + Total Busy Time");
     	System.out.println("Or: Acc. Arrival time + Response/driving time + Service time");
     	

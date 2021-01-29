@@ -76,7 +76,10 @@ public class Region {
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
     	System.out.println("NEW ACCIDENT");
-		System.out.println("Region.handleArrival method:\n new accident at location: \n [" + location[0] + ", " + location[1] +"] \n at Sim time: " + currTime + "\n");
+		System.out.println("Region.handleArrival method:");
+		System.out.println("SIM TIME START: " + currTime);
+		System.out.println(" new accident at location: ");
+		System.out.println(" [" + location[0] + ", " + location[1] +"] \n");
 		
 		
 		// 27-01 addition
@@ -112,13 +115,12 @@ public class Region {
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 		double currTime = accident.getArrivalTime();
 		double arrivalTimeAtAccident = drivingTime + currTime;
-		System.out.println("Region.handleAccident method: \n "
-							+ "+driving time to accident is: " + drivingTime + 
-							",\n So service starts at time: " + arrivalTimeAtAccident);
+		System.out.println("Region.handleAccident method:");
+		System.out.println(" +driving time to accident is: " + drivingTime);
+		System.out.println(" So service will start at time: " + arrivalTimeAtAccident);				
     	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
 
 		amb.startService(accident, arrivalTimeAtAccident);
-		// 28-01 SB: is het mogelijk om vanuit hier de sim.time() up te daten? dat is wat hier nog ontbreekt lijkt me
 	}
 
 	// returns a random location inside the region
