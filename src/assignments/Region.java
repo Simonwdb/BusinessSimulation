@@ -90,8 +90,11 @@ public class Region {
 		Ambulance amb = getAmbulanceAvailable();
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
-			this.queue.add(accident);	
-//			queueAccident(accident);	SB: hiervoor hoeft toch geen aparte method voor aangemaakt te worden? Dit lijkt mij enigzins overbodig
+			
+			System.out.println("Added to queue!!! ERROR CURRENTLY UNHANDLED");
+			Sim.stop(); // omdat we een error hebben
+			//this.queue.add(accident);	
+			//queueAccident(accident);	
 		}
 		else 
 			handleAccident(amb,accident);

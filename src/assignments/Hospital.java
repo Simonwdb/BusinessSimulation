@@ -262,7 +262,7 @@ public class Hospital {
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
 		hospital.simulateOneRunAndReport();
 		
-		/*
+		
 		numRegions = 7; // reset number of regions
 		// simulate ambulance placement 1
 		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
@@ -275,7 +275,7 @@ public class Hospital {
 		hospital.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
-		*/
+		
 		
     }
 
