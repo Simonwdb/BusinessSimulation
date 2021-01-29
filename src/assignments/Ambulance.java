@@ -47,20 +47,26 @@ public class Ambulance extends Event {
         // 28-01 SB: we roepen hier Sim.time(), maar gebruiken deze verder niet?
 //        double currSimTime = Sim.time();
         
-        double serviceTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
+        double processTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
         // should we notify that the accident person is now picked up?
         double drivingTime = this.drivingTimeToHospital(this.currentAccident);
-        double busyServing = serviceTimeAtScene + 2*drivingTime; // calculate the time needed to process the accident and drive back to the base
-        System.out.println("Ambulance.startService method: \n +service time at scene is: " + serviceTimeAtScene + 
-        					", \n +driving to hospital time is: " + drivingTime + ", \n +busy serving time is: " + busyServing + "\n");	
+        double serviceTime = processTimeAtScene + drivingTime; // calculate the time needed to process the accident and drive back to the base
+        System.out.println("Ambulance.startService method: \n "
+        					+ "+service time at scene is: " + processTimeAtScene + 
+        					", \n +driving to hospital time is: " + drivingTime + ", \n "
+        					+ "This totals a service time of \n"
+        					+ " +service time is: " + serviceTime);	
         accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
-        schedule(busyServing); // after busyServing it becomes idle again
+        double totalBusyTime = drivingTime + serviceTime; // we need to add the driving time TO the accident to update the Sim clock correctly!
+        System.out.println(" +total busy time Ambulance: " +totalBusyTime+ "\n");
+        schedule(totalBusyTime); // after busyServing it becomes idle again
         // SB: i think this method is correct
     }
 
 	private void checkResponseTime(Accident acc, double arrAmb) {
 		// Response time is the time between arrival of emergency call and arrival of ambulance at scene.
 		// Should be lower than Hospital.RESPONSE_TIME_TARGET (15)
+		System.out.println("Checking Response Time...");
 		double arrEmCall = acc.getArrivalTime();
 		double actualResponseTime = arrAmb - arrEmCall;
 		System.out.println("Response time is " + actualResponseTime);
@@ -68,7 +74,7 @@ public class Ambulance extends Event {
 		int indicator = 0;
 		if(withinTargetResponse) {
 			indicator = 1;
-			System.out.println("Within target of " + Hospital.RESPONSE_TIME_TARGET);
+			System.out.println("Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");
 		}
 		this.withinTargetTally.add(indicator);
 	}
