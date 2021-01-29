@@ -39,42 +39,45 @@ public class Ambulance extends Event {
 	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
-    	// arr time accident klopt niet??? sim time lijkt niet geupdate te worden!!
-    	checkResponseTime(accident,arrivalTimeAtAccident);
-        currentAccident = accident;
+        System.out.println("Ambulance.startService method:");
+    	currentAccident = accident;
+        accident.serviceStarted(arrivalTimeAtAccident); 
+    	// Ambulance has arrived, check the responsetime first!
+    	checkResponseTime();
         
-        
-        // 28-01 SB: we roepen hier Sim.time(), maar gebruiken deze verder niet?
-//        double currSimTime = Sim.time();
-        
-        double processTimeAtScene = serviceTimeGen.nextDouble(); // is dit zo?
+        double processTimeAtScene = serviceTimeGen.nextDouble(); 
         // should we notify that the accident person is now picked up?
         double drivingTime = this.drivingTimeToHospital(this.currentAccident);
+        
+        
         double serviceTime = processTimeAtScene + drivingTime; // calculate the time needed to process the accident and drive back to the base
-        System.out.println("Ambulance.startService method: \n "
-        					+ "+service time at scene is: " + processTimeAtScene + 
-        					", \n +driving to hospital time is: " + drivingTime + ", \n "
-        					+ "This totals a service time of \n"
-        					+ " +service time is: " + serviceTime);	
-        accident.serviceStarted(arrivalTimeAtAccident); // klopt dit? moet je dit nog ophogen met de tijd huidig
+        
+        // DEBUG
+        System.out.println(" +process time at scene is: " + processTimeAtScene); 
+        System.out.println(" +driving to hospital time is: " + drivingTime);
+        System.out.println("This totals a service time of");
+        System.out.println(" +service time is: " + serviceTime);	
+        
+
         double totalBusyTime = drivingTime + serviceTime; // we need to add the driving time TO the accident to update the Sim clock correctly!
+        
+        // DEBUG
         System.out.println(" +total busy time Ambulance: " +totalBusyTime+ "\n");
-        schedule(totalBusyTime); // after busyServing it becomes idle again
-        // SB: i think this method is correct
+        
+        schedule(totalBusyTime); // niet vergeten Idle
     }
 
-	private void checkResponseTime(Accident acc, double arrAmb) {
+	private void checkResponseTime() {
 		// Response time is the time between arrival of emergency call and arrival of ambulance at scene.
 		// Should be lower than Hospital.RESPONSE_TIME_TARGET (15)
 		System.out.println("Checking Response Time...");
-		double arrEmCall = acc.getArrivalTime();
-		double actualResponseTime = arrAmb - arrEmCall;
-		System.out.println("Response time is " + actualResponseTime);
+		double actualResponseTime = currentAccident.getWaitTime();
+		System.out.println(" +response time is " + actualResponseTime);
 		boolean withinTargetResponse = actualResponseTime <= Hospital.RESPONSE_TIME_TARGET;
 		int indicator = 0;
 		if(withinTargetResponse) {
 			indicator = 1;
-			System.out.println("Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");
+			System.out.println(" Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");
 		}
 		this.withinTargetTally.add(indicator);
 	}
@@ -82,10 +85,11 @@ public class Ambulance extends Event {
 	public void serviceCompleted() {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
-    	double currTime = Sim.time(); // dit klopt niet gek genoeg
-    	
+    	double currTime = Sim.time(); // dit klopt eindelijk!
     	System.out.println("Service complete for Ambulance " + this.id);
     	System.out.println("Ambulance.serviceCompleted method: \n completionTime/currTime/sim.time() is: " + currTime);
+    	System.out.println("This should be equal to: Acc. Arrival time + Total Busy Time");
+    	System.out.println("Or: Acc. Arrival time + Response/driving time + Service time");
     	
     	this.currentAccident.completed(currTime);
     	
