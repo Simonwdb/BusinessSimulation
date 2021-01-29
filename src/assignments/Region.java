@@ -75,6 +75,7 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
+    	System.out.println("NEW ACCIDENT");
 		System.out.println("Region.handleArrival method:\n new accident at location: \n [" + location[0] + ", " + location[1] +"] \n at Sim time: " + currTime + "\n");
 		
 		
@@ -111,8 +112,10 @@ public class Region {
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 		double currTime = accident.getArrivalTime();
 		double arrivalTimeAtAccident = drivingTime + currTime;
-		System.out.println("Region.handleAccident method: \n Driving time to accident is: " + drivingTime + ", \n accident.getArrivalTime() (Sim) is: " + currTime + 
-							",\n service starts at time: " + arrivalTimeAtAccident + "\n");
+		System.out.println("Region.handleAccident method: \n +driving time to accident is: " + drivingTime + 
+							",\n So service starts at time: " + arrivalTimeAtAccident + "\n");
+    	System.out.println("Ambulance " + amb.id + " will handle this accident");
+
 		amb.startService(accident, arrivalTimeAtAccident);
 		// 28-01 SB: is het mogelijk om vanuit hier de sim.time() up te daten? dat is wat hier nog ontbreekt lijkt me
 	}
