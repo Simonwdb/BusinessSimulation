@@ -42,7 +42,7 @@ public class Ambulance extends Event {
         System.out.println("Ambulance.startService method:");
     	currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident); 
-    	// Ambulance has arrived, check the responsetime first!
+    	// Ambulance has arrived at accident location, check the responsetime first!
     	checkResponseTime();
         
         double processTimeAtScene = serviceTimeGen.nextDouble(); 
@@ -96,14 +96,9 @@ public class Ambulance extends Event {
     	waitTimeTally.add(this.currentAccident.getWaitTime());
     	serviceTimeTally.add(this.currentAccident.getServiceTime());
     	
-    	// SB: Do we need to update in this function that the currentAccident is now null?
     	this.currentAccident = null;
-    	
-    	// SB: Do we need to update that the ambulance is driving back from the hospital to their base?
-    	
-    	// SB: Do we need to update the ambulance to idle?
     	baseRegion.idleAmbulances.add(this);
-    	System.out.println("SERVICE ACCIDENT COMPLETED");
+    	System.out.println("SERVICE ACCIDENT COMPLETED \n");
     }
     
     private double euclideanDistance(double[] first, double[] second) {
@@ -118,10 +113,10 @@ public class Ambulance extends Event {
     }
 
     // return Euclidean distance between accident and hospital
-    public double drivingTimeToAccident(Accident cust) {
+    public double drivingTimeToAccident(Accident acc) {
         // calculate the driving time from the baselocation of the ambulance to the accident location
     	double[] ambulanceBase = this.baseRegion.baseLocation;
-    	double[] accidentBase = cust.getLocation();
+    	double[] accidentBase = acc.getLocation();
     	
     	return euclideanDistance(ambulanceBase, accidentBase);
     }
