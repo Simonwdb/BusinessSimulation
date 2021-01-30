@@ -78,7 +78,7 @@ public class Region {
 		// DEBUG
     	System.out.println("NEW ACCIDENT in Region " + regionID);
 		System.out.println("Region.handleArrival method:");
-		System.out.println("SIM TIME START: " + currTime);
+		System.out.println("TIME OF ACCIDENT: " + currTime);
 		System.out.println(" new accident at location: ");
 		System.out.println(" [" + location[0] + ", " + location[1] +"] \n");
 		
@@ -91,12 +91,10 @@ public class Region {
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
 			
-			System.out.println("Added to queue!!! ERROR CURRENTLY UNHANDLED");
-			Sim.stop(); // omdat we een error hebben
-			//this.queue.add(accident);	
-			//queueAccident(accident);	
+			System.out.println("Added to queue!!!");
+			this.queue.add(accident);	
 		}
-		else 
+		else
 			handleAccident(amb,accident);
     }
 
@@ -117,14 +115,34 @@ public class Region {
 	private void handleAccident(Ambulance amb, Accident accident) {
 		// Handle this accident with this ambulance directly!
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
-		double currTime = accident.getArrivalTime();
+		double currTime = Sim.time(); // klopt dit?
 		double arrivalTimeAtAccident = drivingTime + currTime;
 		System.out.println("Region.handleAccident method:");
+		System.out.println(" Current time is: " + currTime);
 		System.out.println(" +driving time to accident is: " + drivingTime);
 		System.out.println(" So service will start at time: " + arrivalTimeAtAccident);				
     	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
 
 		amb.startService(accident, arrivalTimeAtAccident);
+		wrapUpService(amb);
+	}
+
+	private void wrapUpService(Ambulance amb) {
+		// TODO Auto-generated method stub
+		// Try next in queue
+		Accident qacc = this.queue.pollFirst();
+		boolean nextinqueue = qacc != null;
+		if(nextinqueue) { // if there is accident waiting, handle directly!
+	    	System.out.println("QUEUED ACCIDENT in Region " + regionID);
+			System.out.println("Region.handleArrival method:");
+			System.out.println("SIM TIME START: " + Sim.time());
+			System.out.println(" old accident at location: ");
+			System.out.println(" [" + qacc.getLocation()[0] + ", " + qacc.getLocation()[1] +"] \n");
+			System.out.println(" ACCIDENT TIME: " + qacc.getArrivalTime());
+			handleAccident(amb,qacc);
+		}
+		else // set ambulance to idle
+	    	this.idleAmbulances.add(amb);
 	}
 
 	// returns a random location inside the region
