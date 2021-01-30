@@ -97,6 +97,7 @@ public class Ambulance extends Event {
     	serviceTimeTally.add(this.currentAccident.getServiceTime());
     	
     	this.currentAccident = null;
+    	baseRegion.idleAmbulances.add(this);
     	System.out.println("SERVICE ACCIDENT COMPLETED \n");
     }
     
