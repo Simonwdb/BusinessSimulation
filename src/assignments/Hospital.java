@@ -279,8 +279,8 @@ public class Hospital {
 
 		// further optimization experiments can be done here
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
-		int[] ambulancePlacements3 = {2,3,3,3,3,3,3}; // should be of the length numRegions and with a total sum of numAmbulances
-		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements3);
+		int[] ambulancePlacements3 = {7,8,0,0,0,0,5}; // should be of the length numRegions and with a total sum of numAmbulances
+		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
 		hospital3.simulateOneRunAndReport();
 		
     }
@@ -298,6 +298,7 @@ public class Hospital {
 		System.out.println(stats.getName());
 		System.out.println(stats.report());
 		// Q for later: Is the result of simulateOneRun enough to print?
+		System.out.println();
 		
 	}
 }

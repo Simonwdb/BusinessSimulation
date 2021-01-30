@@ -42,6 +42,7 @@ public class Region {
 		arrivalProcess = new ArrivalProcess(arrivalRandomStream, arrivalRate);
 		locationStream = locationRandomStream;
 		//drawLocationsTest(); // test!
+		
 	}
     
     private void drawLocationsTest() {

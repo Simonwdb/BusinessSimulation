@@ -13,7 +13,7 @@ import umontreal.ssj.stat.TallyStore;
  * Edited by qvanderkaaij and jberkhout
  */
 public class Ambulance extends Event {
-
+	
 	// ambulance variables
 	int id;
 	Region baseRegion;
@@ -45,6 +45,8 @@ public class Ambulance extends Event {
         accident.serviceStarted(arrivalTimeAtAccident); 
     	// Ambulance has arrived at accident location, check the responsetime first!
     	checkResponseTime();
+    	
+    	waitTimeTally.add(this.currentAccident.getWaitTime());
         
         double processTimeAtScene = serviceTimeGen.nextDouble(); 
         // should we notify that the accident person is now picked up?
@@ -85,6 +87,7 @@ public class Ambulance extends Event {
 			indicator = 1;
 			if (Hospital.DEBUG_MODE) {System.out.println(" Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");}
 		}
+		
 		this.withinTargetTally.add(indicator);
 	}
 
@@ -102,7 +105,6 @@ public class Ambulance extends Event {
     	
     	this.currentAccident.completed(currTime);
     	
-    	waitTimeTally.add(this.currentAccident.getWaitTime());
     	serviceTimeTally.add(this.currentAccident.getServiceTime());
     	
     	this.currentAccident = null;
