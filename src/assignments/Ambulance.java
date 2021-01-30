@@ -63,6 +63,8 @@ public class Ambulance extends Event {
         
         // DEBUG
         System.out.println(" +total busy time Ambulance: " +totalBusyTime+ "\n");
+        System.out.println("Sim.time: " +Sim.time());
+        System.out.println("So completion will be handled at time : " + (Sim.time() + totalBusyTime));
         
         schedule(totalBusyTime); // niet vergeten Idle
     }
