@@ -39,7 +39,8 @@ public class Ambulance extends Event {
 	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
-        System.out.println("Ambulance.startService method:");
+    	if (Hospital.DEBUG_MODE) {System.out.println("Ambulance.startService method:");}
+    	
     	currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident); 
     	// Ambulance has arrived at accident location, check the responsetime first!
@@ -52,35 +53,37 @@ public class Ambulance extends Event {
         
         double serviceTime = processTimeAtScene + drivingTime; // calculate the time needed to process the accident and drive back to the base
         
-        // DEBUG
-        System.out.println(" +process time at scene is: " + processTimeAtScene); 
-        System.out.println(" +driving to hospital time is: " + drivingTime);
-        System.out.println("This totals a service time of");
-        System.out.println(" +service time is: " + serviceTime);	
-        
+        if (Hospital.DEBUG_MODE) {
+	        // DEBUG
+	        System.out.println(" +process time at scene is: " + processTimeAtScene); 
+	        System.out.println(" +driving to hospital time is: " + drivingTime);
+	        System.out.println("This totals a service time of");
+	        System.out.println(" +service time is: " + serviceTime);	
+        }
 
         double totalBusyTime = drivingTime + serviceTime; // we need to add the driving time TO the accident to update the Sim clock correctly!
         
-        // DEBUG
-        System.out.println(" +total busy time Ambulance: " +totalBusyTime+ "\n");
-        System.out.println("Sim.time: " +Sim.time());
-        System.out.println("So completion will be handled at time : " + (Sim.time() + totalBusyTime));
-        
+        if (Hospital.DEBUG_MODE) {
+	        // DEBUG
+	        System.out.println(" +total busy time Ambulance: " +totalBusyTime+ "\n");
+	        System.out.println("Sim.time: " +Sim.time());
+	        System.out.println("So completion will be handled at time : " + (Sim.time() + totalBusyTime));
+        }
         schedule(totalBusyTime); // niet vergeten Idle
     }
 
 	private void checkResponseTime() {
 		// Response time is the time between arrival of emergency call and arrival of ambulance at scene.
 		// Should be lower than Hospital.RESPONSE_TIME_TARGET (15)
-		System.out.println("Checking Response Time...");
+		if (Hospital.DEBUG_MODE) {System.out.println("Checking Response Time...");}
 		double actualResponseTime = currentAccident.getWaitTime();
-		System.out.println(" +response time is " + actualResponseTime);
+		if (Hospital.DEBUG_MODE) {System.out.println(" +response time is " + actualResponseTime);}
 		boolean withinTargetResponse = actualResponseTime <= Hospital.RESPONSE_TIME_TARGET;
 		
 		int indicator = 0;
 		if(withinTargetResponse) {
 			indicator = 1;
-			System.out.println(" Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");
+			if (Hospital.DEBUG_MODE) {System.out.println(" Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");}
 		}
 		this.withinTargetTally.add(indicator);
 	}
@@ -89,10 +92,13 @@ public class Ambulance extends Event {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
     	double currTime = Sim.time(); // dit klopt eindelijk!
-    	System.out.println("Service complete for Ambulance " + this.id);
-    	System.out.println("SIM TIME END/completionTime/currTime is: " + currTime);
-    	System.out.println("This should be equal to: Acc. Arrival time + Total Busy Time");
-    	System.out.println("Or: Acc. Arrival time + Response/driving time + Service time");
+    	
+    	if (Hospital.DEBUG_MODE) {
+	    	System.out.println("Service complete for Ambulance " + this.id);
+	    	System.out.println("SIM TIME END/completionTime/currTime is: " + currTime);
+	    	System.out.println("This should be equal to: Acc. Arrival time + Total Busy Time");
+	    	System.out.println("Or: Acc. Arrival time + Response/driving time + Service time");
+    	}
     	
     	this.currentAccident.completed(currTime);
     	
@@ -100,7 +106,7 @@ public class Ambulance extends Event {
     	serviceTimeTally.add(this.currentAccident.getServiceTime());
     	
     	this.currentAccident = null;
-    	System.out.println("SERVICE ACCIDENT COMPLETED \n");
+    	if (Hospital.DEBUG_MODE) {System.out.println("SERVICE ACCIDENT COMPLETED \n");}
     	this.baseRegion.wrapUpService(this);
     }
     

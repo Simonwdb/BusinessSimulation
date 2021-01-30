@@ -19,6 +19,8 @@ import umontreal.ssj.stat.list.ListOfStatProbes;
  * Edited by qvanderkaaij and jberkhout
  */
 public class Hospital {
+	
+	public static boolean DEBUG_MODE = false;
 
 	// SB: can we place this here?
 	final static double DIAMETER = 10;
@@ -277,7 +279,7 @@ public class Hospital {
 
 		// further optimization experiments can be done here
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
-		int[] ambulancePlacements3 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
+		int[] ambulancePlacements3 = {2,3,3,3,3,3,3}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements3);
 		hospital3.simulateOneRunAndReport();
 		

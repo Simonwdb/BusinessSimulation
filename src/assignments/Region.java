@@ -76,13 +76,14 @@ public class Region {
 		double currTime = Sim.time();
 		double[] location = drawLocation();
 		Accident accident = new Accident(currTime, location, this.regionID);
-		// DEBUG
-    	System.out.println("NEW ACCIDENT in Region " + regionID);
-		System.out.println("Region.handleArrival method:");
-		System.out.println("TIME OF ACCIDENT: " + currTime);
-		System.out.println(" new accident at location: ");
-		System.out.println(" [" + location[0] + ", " + location[1] +"] \n");
-		
+		if (Hospital.DEBUG_MODE) {
+			// DEBUG
+	    	System.out.println("NEW ACCIDENT in Region " + regionID);
+			System.out.println("Region.handleArrival method:");
+			System.out.println("TIME OF ACCIDENT: " + currTime);
+			System.out.println(" new accident at location: ");
+			System.out.println(" [" + location[0] + ", " + location[1] +"] \n");
+		}
 		
 		// 27-01 addition
 		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
@@ -92,7 +93,7 @@ public class Region {
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
 			
-			System.out.println("Added to queue!!!");
+			if (Hospital.DEBUG_MODE) {System.out.println("Added to queue!!!");}
 			this.queue.add(accident);	
 		}
 		else
@@ -134,12 +135,14 @@ public class Region {
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
 		double currTime = Sim.time(); // klopt dit?
 		double arrivalTimeAtAccident = drivingTime + currTime;
-		System.out.println("Region.handleAccident method:");
-		System.out.println(" Current time is: " + currTime);
-		System.out.println(" +driving time to accident is: " + drivingTime);
-		System.out.println(" So service will start at time: " + arrivalTimeAtAccident);				
-    	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
-
+		
+		if (Hospital.DEBUG_MODE) {
+			System.out.println("Region.handleAccident method:");
+			System.out.println(" Current time is: " + currTime);
+			System.out.println(" +driving time to accident is: " + drivingTime);
+			System.out.println(" So service will start at time: " + arrivalTimeAtAccident);				
+	    	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
+		}
 		amb.startService(accident, arrivalTimeAtAccident);
 		
 //		wrapUpService(amb);
@@ -151,12 +154,14 @@ public class Region {
 		Accident qacc = this.queue.pollFirst();
 		boolean nextinqueue = qacc != null;
 		if(nextinqueue) { // if there is accident waiting, handle directly!
-	    	System.out.println("QUEUED ACCIDENT in Region " + regionID);
-			System.out.println("Region.handleArrival method:");
-			System.out.println("SIM TIME START: " + Sim.time());
-			System.out.println(" old accident at location: ");
-			System.out.println(" [" + qacc.getLocation()[0] + ", " + qacc.getLocation()[1] +"] \n");
-			System.out.println(" ACCIDENT TIME: " + qacc.getArrivalTime());
+			if (Hospital.DEBUG_MODE) {
+		    	System.out.println("QUEUED ACCIDENT in Region " + regionID);
+				System.out.println("Region.handleArrival method:");
+				System.out.println("SIM TIME START: " + Sim.time());
+				System.out.println(" old accident at location: ");
+				System.out.println(" [" + qacc.getLocation()[0] + ", " + qacc.getLocation()[1] +"] \n");
+				System.out.println(" ACCIDENT TIME: " + qacc.getArrivalTime());
+			}
 			handleAccident(amb,qacc);
 		}
 		else // set ambulance to idle
