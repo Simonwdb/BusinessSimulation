@@ -47,6 +47,7 @@ public class Ambulance extends Event {
     	checkResponseTime();
     	
     	waitTimeTally.add(this.currentAccident.getWaitTime());
+    	
         
         double processTimeAtScene = serviceTimeGen.nextDouble(); 
         // should we notify that the accident person is now picked up?
@@ -71,6 +72,9 @@ public class Ambulance extends Event {
 	        System.out.println("Sim.time: " +Sim.time());
 	        System.out.println("So completion will be handled at time : " + (Sim.time() + totalBusyTime));
         }
+        
+        serviceTimeTally.add(serviceTime);
+        
         schedule(totalBusyTime); // niet vergeten Idle
     }
 
@@ -104,8 +108,6 @@ public class Ambulance extends Event {
     	}
     	
     	this.currentAccident.completed(currTime);
-    	
-    	serviceTimeTally.add(this.currentAccident.getServiceTime());
     	
     	this.currentAccident = null;
     	if (Hospital.DEBUG_MODE) {System.out.println("SERVICE ACCIDENT COMPLETED \n");}
