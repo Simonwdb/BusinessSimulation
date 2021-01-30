@@ -108,10 +108,7 @@ public class Region {
     	
     	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
     	double distance = (result == null) ? 1000.0 : result.drivingTimeToAccident(accident);
-    	System.out.println("Driving distance of result is : " + distance);
 
-    	System.out.println("STARTING TO FIND AMBULANCES FROM OUTSIDE REGIONS");
-    	
     	// second case: if ambulances can help outside their regions
     	for (int i = 0; i < this.regions.length; i++) {
     		if (this.regions[i].idleAmbulances.size() > 0) {
