@@ -90,6 +90,8 @@ public class Ambulance extends Event {
 		if(withinTargetResponse) {
 			indicator = 1;
 			if (Hospital.DEBUG_MODE) {System.out.println(" Within target of " + Hospital.RESPONSE_TIME_TARGET + "!\n");}
+		} else {
+			if (Hospital.DEBUG_MODE) {System.out.println("NOT WITHIN TARGET OF 15! \n");}
 		}
 		
 		this.withinTargetTally.add(indicator);

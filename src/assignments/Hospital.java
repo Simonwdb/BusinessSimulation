@@ -254,7 +254,7 @@ public class Hospital {
 		int numAmbulances = 20;
 		double[] arrivalRates = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15}; // arrival rates per region
 		double serviceRate = 1.0;
-		double stopTime = 20; // simulation endtime (minutes)
+		double stopTime = 10000; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
 		/*
 
@@ -269,7 +269,7 @@ public class Hospital {
 		int numRegions = 7; // reset number of regions
 		
 		// simulate ambulance placement 1
-		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
+		int[] ambulancePlacements1 = {1, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital.simulateOneRunAndReport();
 		// simulate ambulance placement 2
@@ -278,10 +278,10 @@ public class Hospital {
 //		hospital.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
-//		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
-//		int[] ambulancePlacements3 = {7,8,0,0,0,0,5}; // should be of the length numRegions and with a total sum of numAmbulances
-//		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
-//		hospital3.simulateOneRunAndReport();
+		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
+		int[] ambulancePlacements3 = {1,0,0,0,0,0,0}; // should be of the length numRegions and with a total sum of numAmbulances
+		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
+		hospital3.simulateOneRunAndReport();
 		
     }
 
