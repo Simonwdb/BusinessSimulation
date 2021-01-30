@@ -105,18 +105,23 @@ public class Region {
 		
 		// base case retrieve the ambulance from this.idleAmbulances (when ambulances can't help outside their region)
     	Ambulance result = this.idleAmbulances.pollFirst();
+    	
+    	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
+    	double distance = (result == null) ? 1000.0 : result.drivingTimeToAccident(accident);
+    	System.out.println("Driving distance of result is : " + distance);
 
+    	System.out.println("STARTING TO FIND AMBULANCES FROM OUTSIDE REGIONS");
+    	
     	// second case: if ambulances can help outside their regions
     	for (int i = 0; i < this.regions.length; i++) {
-    		Ambulance amb = this.regions[i].idleAmbulances.pollFirst();
-    		if (amb != null && amb.servesOutsideRegion) {
-    			if (result.drivingTimeToAccident(accident) > amb.drivingTimeToAccident(accident)) {
-    				System.out.println("CHANGING AMBULANCE TO CLOSER ONE, OUTSIDE REGION");
-    				result = amb;
-    			}
+    		if (this.regions[i].idleAmbulances.size() > 0) {
+	    		if (this.regions[i].idleAmbulances.peekFirst().servesOutsideRegion) {
+	    			if (distance > this.regions[i].idleAmbulances.peekFirst().drivingTimeToAccident(accident)) {
+	    				result = this.regions[i].idleAmbulances.pollFirst();
+	    			}
+	    		}
     		}
     	}
-    	
     	return result;
     	// NB! TODO: this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
 	}
