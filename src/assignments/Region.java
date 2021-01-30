@@ -69,6 +69,7 @@ public class Region {
 	}
 
 	public void handleArrival() {
+
 		
 		// SB: trying with the assumption that there always will be a idle ambulance
 		// Get current accident
@@ -87,7 +88,7 @@ public class Region {
 		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
 		// Allen idle ambulances vanuit de centrale kunnen helpen.
 		// By service complete pas vanaf de queue halen
-		Ambulance amb = getAmbulanceAvailable();
+		Ambulance amb = getAmbulanceAvailable(accident);
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
 			
@@ -98,10 +99,24 @@ public class Region {
 			handleAccident(amb,accident);
     }
 
-	private Ambulance getAmbulanceAvailable() {
+	private Ambulance getAmbulanceAvailable(Accident accident) {
 		// Check if there are ambulances available to process this accident, if yes retrieve it!
 		// TODO: als andere regios mogen helpen, moet deze methode dat ook regelen!
+		
+		// base case retrieve the ambulance from this.idleAmbulances (when ambulances can't help outside their region)
     	Ambulance result = this.idleAmbulances.pollFirst();
+
+    	// second case: if ambulances can help outside their regions
+    	for (int i = 0; i < this.regions.length; i++) {
+    		Ambulance amb = this.regions[i].idleAmbulances.pollFirst();
+    		if (amb != null && amb.servesOutsideRegion) {
+    			if (result.drivingTimeToAccident(accident) > amb.drivingTimeToAccident(accident)) {
+    				System.out.println("CHANGING AMBULANCE TO CLOSER ONE, OUTSIDE REGION");
+    				result = amb;
+    			}
+    		}
+    	}
+    	
     	return result;
     	// NB! TODO: this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
 	}
@@ -124,10 +139,11 @@ public class Region {
     	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
 
 		amb.startService(accident, arrivalTimeAtAccident);
-		wrapUpService(amb);
+		
+//		wrapUpService(amb);
 	}
 
-	private void wrapUpService(Ambulance amb) {
+	public void wrapUpService(Ambulance amb) {
 		// TODO Auto-generated method stub
 		// Try next in queue
 		Accident qacc = this.queue.pollFirst();

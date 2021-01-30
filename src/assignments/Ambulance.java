@@ -76,6 +76,7 @@ public class Ambulance extends Event {
 		double actualResponseTime = currentAccident.getWaitTime();
 		System.out.println(" +response time is " + actualResponseTime);
 		boolean withinTargetResponse = actualResponseTime <= Hospital.RESPONSE_TIME_TARGET;
+		
 		int indicator = 0;
 		if(withinTargetResponse) {
 			indicator = 1;
@@ -100,6 +101,7 @@ public class Ambulance extends Event {
     	
     	this.currentAccident = null;
     	System.out.println("SERVICE ACCIDENT COMPLETED \n");
+    	this.baseRegion.wrapUpService(this);
     }
     
     private double euclideanDistance(double[] first, double[] second) {

@@ -252,30 +252,27 @@ public class Hospital {
 		int numAmbulances = 20;
 		double[] arrivalRates = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15}; // arrival rates per region
 		double serviceRate = 1.0;
-		double stopTime = 10000; // simulation endtime (minutes)
+		double stopTime = 20; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
-		
-		// simulate ambulance placement 0: only central region
-		//int numRegions = 1;
-		// miscchien aanpassen, 20 is vrij veel misschien
-		//int[] ambulancePlacements = {20, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
-		//Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
-		//hospital.simulateOneRunAndReport();
-		
-		
+		/*
+//		 simulate ambulance placement 0: only central region
+		int numRegions = 1;
+//		 miscchien aanpassen, 20 is vrij veel misschien
+		int[] ambulancePlacements = {20, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
+		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
+		hospital.simulateOneRunAndReport();
+		*/
 		int numRegions = 7; // reset number of regions
 		// simulate ambulance placement 1
 		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital.simulateOneRunAndReport();
-		/*
 		// simulate ambulance placement 2
 		int[] ambulancePlacements2 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements2);
 		hospital.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
-		*/
 		
     }
 
