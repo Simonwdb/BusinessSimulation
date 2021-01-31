@@ -281,8 +281,8 @@ public class LocalSearch {
 		// Prints out the k and K of this "optimal" state
     	System.out.println("Local search results - best state found is:");
         System.out.println(Arrays.toString(opt.toAmbPlacements()));
-		// and the average costs found for this choice of threshold settings
-        System.out.println("Average costs per time unit (long-run):");
+		// and the average costs found for this choice of settings
+        System.out.println("Average score:");
         System.out.println(opt.values.average());
 	}
 }
