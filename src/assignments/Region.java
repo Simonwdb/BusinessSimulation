@@ -117,6 +117,7 @@ public class Region {
 	    		if (this.regions[i].idleAmbulances.peekFirst().servesOutsideRegion) {
 	    			if (distance > this.regions[i].idleAmbulances.peekFirst().drivingTimeToAccident(accident)) {
 	    				result = this.regions[i].idleAmbulances.pollFirst();
+	    				distance = result.drivingTimeToAccident(accident);
 	    			}
 	    		}
     		}

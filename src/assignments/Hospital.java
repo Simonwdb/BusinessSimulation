@@ -100,6 +100,7 @@ public class Hospital {
 			Ambulance ambulance = new Ambulance(i, regions[region], serviceRandomStream, serviceRate, serveOutsideBaseRegion);
 			ambulances[i] = ambulance;
 			regions[region].idleAmbulances.add(ambulance); // initially the ambulance is idle
+			if (this.DEBUG_MODE) {System.out.println("Size of region [" + region + "] is: " + regions[region].idleAmbulances.size());}
 		}
 	}
 
@@ -109,19 +110,12 @@ public class Hospital {
 
         // use ambulancePlacements to return the right base region index for
         // the ambulance with ambulanceNumber
-    	
-    	// SB: in the previous file from canvas, this function was already filled
-    	// SB: below in multiple comment-line is the code from that previous file
-    	/*
-    	 *     public int determineBaseRegion(int ambulanceNumber) {
-			        // This function can be altered to test different ambulance placements
-			        return ambulanceNumber % numRegions;
-			    }
-    	 */
-
-    	// SB: can we use the code from above?
-    	
-        return ambulanceNumber % this.numRegions;
+    	for (int i = 0; i < this.numRegions; i ++) {
+    		if (this.regions[i].idleAmbulances.size() < this.ambulancePlacements[i]) {
+    			return i;
+    		}
+    	}
+    	return 0;
     }
 
     // returns the location coordinates of the base of region j
@@ -269,7 +263,7 @@ public class Hospital {
 		int numRegions = 7; // reset number of regions
 		
 		// simulate ambulance placement 1
-		int[] ambulancePlacements1 = {1, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
+		int[] ambulancePlacements1 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital.simulateOneRunAndReport();
 		// simulate ambulance placement 2
@@ -279,7 +273,7 @@ public class Hospital {
 
 		// further optimization experiments can be done here
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
-		int[] ambulancePlacements3 = {1,0,0,0,0,0,0}; // should be of the length numRegions and with a total sum of numAmbulances
+		int[] ambulancePlacements3 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
 		hospital3.simulateOneRunAndReport();
 		
