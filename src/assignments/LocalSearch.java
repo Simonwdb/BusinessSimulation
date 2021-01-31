@@ -231,7 +231,8 @@ public class LocalSearch {
 		// set correct lower and upper bounds, 0 and 20
 
 		
-		// Add every neighbor in the "neighbourhood" (within xl,xu,yl,yu) to the list
+		// Add every neighbor in the "neighbourhood" to the list
+		// Neighbourhood is defined by placing an ambulance in another region
 		// for every neighbor
 		// {
 		//		result.add(ni);
@@ -249,7 +250,7 @@ public class LocalSearch {
 	
     public void runSingleRun(int[] ambPlacements) {
 
-        // Nog extra dingen doen?
+        // We need to do something extra here
         
         runSimulation(ambPlacements);
     }
@@ -258,6 +259,7 @@ public class LocalSearch {
         
     	Hospital h = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambPlacements);
     	ListOfStatProbes ls = h.simulateOneRun();
+    	// update outputs with averages of target score
 		
 	}
 	
