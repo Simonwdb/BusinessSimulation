@@ -157,7 +157,7 @@ public class Region {
 	}
 
 	public void wrapUpService(Ambulance amb) {
-		// TODO Auto-generated method stub
+		// Complete the service for this ambulance by handling the next accident in the queue, or setting the ambulance to idle.
 		// Try next in queue
 		Accident qacc = this.queue.pollFirst();
 		boolean nextinqueue = qacc != null;
