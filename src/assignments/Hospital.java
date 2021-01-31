@@ -277,6 +277,17 @@ public class Hospital {
 		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
 		hospital3.simulateOneRunAndReport();
 		
+		
+		System.out.println("OPTIMAL HOSPITAL, with help from other region = false \n");
+		
+		int[] ambulancePlacementsOptimal = {2, 3, 3, 3, 3, 3, 3};
+		Hospital hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacementsOptimal);
+		hospitalOptimal.simulateOneRunAndReport();
+		
+		System.out.println("OPTIMAL HOSPITAL, with help from other region = true \n");
+		
+		hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacementsOptimal);
+		hospitalOptimal.simulateOneRunAndReport();
     }
 
 	private void simulateOneRunAndReport() {
