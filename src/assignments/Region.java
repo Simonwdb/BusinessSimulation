@@ -107,6 +107,10 @@ public class Region {
 		
 		// base case retrieve the ambulance from this.idleAmbulances (when ambulances can't help outside their region)
     	Ambulance result = this.idleAmbulances.pollFirst();
+    	if(result == null)
+    		return null;
+    	if(!result.servesOutsideRegion)
+    		return result;
     	
     	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
     	double distance = (result == null) ? 1000.0 : result.drivingTimeToAccident(accident);
