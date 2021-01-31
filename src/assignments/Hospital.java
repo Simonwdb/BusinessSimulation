@@ -299,6 +299,16 @@ public class Hospital {
 		hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacementsOptimal);
 		hospitalOptimal.simulateOneRunAndReport();
 		
+		System.out.println("OLD OPTIMAL HOSPITAL, with different rates and no help \n");
+		double[] arrivalRates3 = {1./5, 1./20, 1./20, 1./20, 1./20, 1./20, 1./20};
+		Hospital hospitalOldOptimal = new Hospital(numAmbulances, arrivalRates3, serviceRate, stopTime, numRegions, false, ambulancePlacementsOptimal);
+		hospitalOldOptimal.simulateOneRunAndReport();
+		
+		System.out.println("NEW OPTIMAL HOSPITAL, with different rates and no help \n");
+		int[] ambulancePlacementsNewOptimal = {4, 2, 2, 3, 3, 3, 3};
+		Hospital hospitalNewOptimal = new Hospital(numAmbulances, arrivalRates3, serviceRate, stopTime, numRegions, false, ambulancePlacementsNewOptimal);
+		hospitalNewOptimal.simulateOneRunAndReport();
+		
 		// Further optimization experiments
 		// Unfortunately, local search does not work
 		//int budget = 5000;
