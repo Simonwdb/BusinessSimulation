@@ -36,9 +36,6 @@ public class Hospital {
 	double serviceRate; // at accidents
 	int[] ambulancePlacements; // ambulance placement strategy
 	double stopTime;
-	HashMap<String,State> outputs;
-	
-	public State[][][][][][][] ooutputs;
 
 	// RNG for seeds
 	Random rng = new Random(); // for replication purposes you could set a seed
@@ -49,44 +46,7 @@ public class Hospital {
 	Tally withinTargetTally;
 	ListOfStatProbes<StatProbe> listStatsTallies;
 	
-	// A state represents a solution and has an a-g value which correspond
-    // with the Region 0-6 number of ambulance placements, respectively.
-    class State {
-
-        int aval;
-        int bval;
-        int cval;
-        int dval;
-        int eval;
-        int fval;
-        int gval;
-        TallyStore values;
-
-        public State(int a, int b, int c, int d, int e, int f, int g) {
-            this.aval = a;
-            this.bval = b;
-            this.cval = c;
-            this.dval = d;
-            this.eval = e;
-            this.fval = f;
-            this.gval = g;
-            this.values = new TallyStore("("+a+","+b+","+c+","+d+","+e+","+f+", "+g+")");
-            this.values.init();
-        }
-        
-        public State(int[] params) {
-            this.aval = params[0];
-            this.bval = params[1];
-            this.cval = params[2];
-            this.dval = params[3];
-            this.eval = params[4];
-            this.fval = params[5];
-            this.gval = params[6];
-            this.values = new TallyStore("("+aval+","+bval+","+cval+","+dval+","+eval+","+fval+", "+gval+")");
-            this.values.init();
-        }
-
-    }
+	
 
 	public Hospital(int numAmbulances, double[] arrivalRates, double serviceRate, double stopTime, int numRegions, boolean serveOutsideBaseRegion, int[] ambulancePlacements) {
 
@@ -108,7 +68,6 @@ public class Hospital {
 		// create and assign ambulances to regions
 		createAssignAmbulances(serveOutsideBaseRegion);
 		
-		createStates();
 		// create Tallies
 		waitTimeTally = new Tally("Waiting time");
 		serviceTimeTally = new Tally("Service time");
@@ -119,46 +78,6 @@ public class Hospital {
 		listStatsTallies.add(waitTimeTally);
 		listStatsTallies.add(serviceTimeTally);
 		listStatsTallies.add(withinTargetTally);
-	}
-
-	private void createStates() {
-		// Takes around two minutes due to the large size of parameter options
-		outputs = new HashMap<String,State>();
-		int n = numAmbulances + 1; // usually 21
-		
-		//ooutputs = new State[n][n][n][n][n][n][n];
-
-		for(int a = 0; a<n; a++)
-			for(int b = 0; b<n; b++)
-				for(int c = 0; c<n; c++)
-					for(int d = 0; d<n; d++)
-						for(int e = 0; e<n; e++)
-							for(int f = 0; f<n; f++)
-								for(int g = 0; g<n; g++)
-								{
-									int sum = a+b+c+d+e+f+g;
-									if(sum == numAmbulances) {
-										String key = computeKey(a,b,c,d,e,f,g);
-										State state = new State(a,b,c,d,e,f,g);
-										outputs.put(key, state);
-									}
-								}
-		
-
-		
-		
-	}
-
-	private String computeKey(int a, int b, int c, int d, int e, int f, int g) {
-		// TODO Auto-generated method stub
-		String result = "" + a;
-		result += b;
-		result += c;
-		result += d;
-		result += e;
-		result += f;
-		result += g;
-		return result;
 	}
 
 	private void setSeed() {
@@ -381,3 +300,4 @@ public class Hospital {
 		
 	}
 }
+
