@@ -5,7 +5,9 @@ import java.util.Random;
 
 import assignments.LocalSearch.State;
 import umontreal.ssj.rng.MRG32k3a;
+import umontreal.ssj.simevents.Sim;
 import umontreal.ssj.stat.TallyStore;
+import umontreal.ssj.stat.list.ListOfStatProbes;
 
 public class LocalSearch {
 	// A state represents a solution and has an a-g value which correspond
@@ -45,22 +47,46 @@ public class LocalSearch {
             this.values = new TallyStore("("+aval+","+bval+","+cval+","+dval+","+eval+","+fval+", "+gval+")");
             this.values.init();
         }
+        
+        public int[] toAmbPlacements() {
+        	// Returns the values in an array
+        	int[] result = {aval,bval,cval,dval,eval,fval,gval};
+        	return result;
+        }
     }
 	
 	public HashMap<String,State> outputs;
 	public int numAmbulances;
-	public int budget;
     Random rng = new Random();
+	private double[] arrivalRates;
+	private double serviceRate;
+	private double stopTime;
+	private int numRegions;
+	private boolean serveOutsideBaseRegion;
+	public int budget;
 
     static final double BIGM = 9999999999999.99;
 	
-	public LocalSearch(int numAmbulances, int budget) {
+	public LocalSearch(int numAmbulances, double[] arrivalRates, double serviceRate, double stopTime, int numRegions, boolean serveOutsideBaseRegion, int budget) {
+		
 		this.numAmbulances = numAmbulances;
+		this.arrivalRates = arrivalRates;
+		this.serviceRate = serviceRate;
+		this.stopTime  = stopTime;
+		this.numRegions = numRegions;
+		this.serveOutsideBaseRegion = serveOutsideBaseRegion;
 		this.budget = budget; // 5000
+		
+		setUpLocalSearch();
+	}
+	
+	private void setUpLocalSearch() {
+		// Perform basic setting up.
 		createStates();
 		rng.setSeed(0);
 	}
-	
+
+	/* verplaatsen
 	// generate a random stream based on a random seed
 	public MRG32k3a getStream() {
 		long[] seed = new long[6];
@@ -70,14 +96,12 @@ public class LocalSearch {
 		MRG32k3a myrng = new MRG32k3a();
 		myrng.setSeed(seed);
 		return myrng;
-	}
+	} */
 	
 	private void createStates() {
 		// Takes around two minutes due to the large size of parameter options
 		outputs = new HashMap<String,State>();
 		int n = numAmbulances + 1; // usually 21
-		
-		//ooutputs = new State[n][n][n][n][n][n][n];
 
 		for(int a = 0; a<n; a++)
 			for(int b = 0; b<n; b++)
@@ -94,11 +118,10 @@ public class LocalSearch {
 										outputs.put(key, state);
 									}
 								}
-
 	}
 	
 	private String computeKey(int a, int b, int c, int d, int e, int f, int g) {
-		// TODO Auto-generated method stub
+		// Given 7 ambulance options, computes the corresponding key
 		String result = "" + a;
 		result += b;
 		result += c;
@@ -157,31 +180,22 @@ public class LocalSearch {
 
     public State selectRandomStart() {
         // select a random state
-        int i = randOutputIndex(); 
-        State state = outputs[i];
+        String i = randOutputIndex(); 
+        State state = outputs.get(i);
 
         return state;
     }
     
-    private int randOutputIndex() {
+    private String randOutputIndex() {
 		// Return a random index from the outputs array
-        MRG32k3a rand = getStream();
+    	return "2333333";
+        /*MRG32k3a rand = getStream();
         int l = 0;			   // lowest possible index
         int u = numStates - 1; // largest possible index
         int i = rand.nextInt(l,u);
-        return i;
+        return i;*/
 	}
     
-    private int randOutputIndex2() {
-    	// not used: slower version of randOutputIndex
-		// Return a random index from the outputs array
-        MRG32k3a rand1 = getStream();
-        MRG32k3a rand2 = getStream();
-        int rx = rand1.nextInt(xmin, xmax);
-        int ry = rand2.nextInt(ymin, ymax);
-        int i = calcPos(rx,ry);
-        return i;
-	}
 
 	public State selectRandomNeighbor(State state) {
         State neighbor;    
@@ -209,7 +223,7 @@ public class LocalSearch {
 		// return all neighbors in the list, denote them by their unique index (used in outputs[])
 		List<Integer> result = new ArrayList<Integer>();
 		// abbreviate the k and K of this state
-		int x = state.xval; // k of this state
+		int x = state.aval; // k of this state
 		int y = state.yval; // K of this state
 		
 		// set correct lower and upper bounds for neighbors
@@ -239,10 +253,23 @@ public class LocalSearch {
 
 	private void runSingleRunState(State pi) {
 		// Wrapper method: Performs a 'run' for a certain state
-		int k = pi.xval;
-		int K = pi.yval;
+		int[] ambPlacements = pi.toAmbPlacements();
 		
-		runSingleRun(k, K);
+		runSingleRun(ambPlacements);
+	}
+	
+    public void runSingleRun(int[] ambPlacements) {
+
+        // Nog extra dingen doen?
+        
+        runSimulation(ambPlacements);
+    }
+    
+    public void runSimulation(int[] ambPlacements) {
+        
+    	Hospital h = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambPlacements);
+    	ListOfStatProbes ls = h.simulateOneRun();
+		
 	}
 	
 	public State selectBestState(State current, State neighbor) {
@@ -263,7 +290,7 @@ public class LocalSearch {
 		// Prints out the k and K of this "optimal" state
     	System.out.println("Local search results - best state found is:");
         System.out.println("k =");
-        System.out.println(opt.xval);
+        System.out.println(opt.aval);
         System.out.println("K =");
         System.out.println(opt.yval);
 		// and the average costs found for this choice of threshold settings
