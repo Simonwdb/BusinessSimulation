@@ -2,6 +2,8 @@ package assignments;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Random;
 
 import umontreal.ssj.rng.MRG32k3a;
@@ -10,6 +12,7 @@ import umontreal.ssj.simevents.Event;
 import umontreal.ssj.simevents.Sim;
 import umontreal.ssj.stat.StatProbe;
 import umontreal.ssj.stat.Tally;
+import umontreal.ssj.stat.TallyStore;
 import umontreal.ssj.stat.list.ListOfStatProbes;
 
 /**
@@ -44,6 +47,8 @@ public class Hospital {
 	Tally waitTimeTally;
 	Tally withinTargetTally;
 	ListOfStatProbes<StatProbe> listStatsTallies;
+	
+	
 
 	public Hospital(int numAmbulances, double[] arrivalRates, double serviceRate, double stopTime, int numRegions, boolean serveOutsideBaseRegion, int[] ambulancePlacements) {
 
@@ -64,7 +69,7 @@ public class Hospital {
 
 		// create and assign ambulances to regions
 		createAssignAmbulances(serveOutsideBaseRegion);
-
+		
 		// create Tallies
 		waitTimeTally = new Tally("Waiting time");
 		serviceTimeTally = new Tally("Service time");
@@ -304,3 +309,4 @@ public class Hospital {
 		System.out.println();
 	}
 }
+

@@ -96,7 +96,7 @@ public class Region {
 			if (Hospital.DEBUG_MODE) {System.out.println("Added to queue.");}
 			this.queue.add(accident);	
 		}
-		else
+		else 
 			handleAccident(amb,accident);
     }
 
@@ -141,7 +141,7 @@ public class Region {
 	private void handleAccident(Ambulance amb, Accident accident) {
 		// Handle this accident with this ambulance directly!
 		double drivingTime = amb.drivingTimeToAccident(accident); // houden we hier rekening met de huidige tijd?
-		double currTime = Sim.time(); // klopt dit?
+		double currTime = accident.getArrivalTime();
 		double arrivalTimeAtAccident = drivingTime + currTime;
 		
 		if (Hospital.DEBUG_MODE) {
