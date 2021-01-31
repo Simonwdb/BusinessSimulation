@@ -100,7 +100,7 @@ public class Hospital {
 			Ambulance ambulance = new Ambulance(i, regions[region], serviceRandomStream, serviceRate, serveOutsideBaseRegion);
 			ambulances[i] = ambulance;
 			regions[region].idleAmbulances.add(ambulance); // initially the ambulance is idle
-			if (this.DEBUG_MODE) {System.out.println("Size of region [" + region + "] is: " + regions[region].idleAmbulances.size());}
+			if (Hospital.DEBUG_MODE) {System.out.println("Size of region [" + region + "] is: " + regions[region].idleAmbulances.size());}
 		}
 	}
 

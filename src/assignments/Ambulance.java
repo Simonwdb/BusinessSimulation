@@ -83,8 +83,6 @@ public class Ambulance extends Event {
         
 //        serviceTimeTally.add(serviceTime);
         
-//        updateTally(accident);
-        
         schedule(totalBusyTime); // niet vergeten Idle
     }
 
