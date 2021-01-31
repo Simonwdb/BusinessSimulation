@@ -264,11 +264,21 @@ public class Hospital {
 		*/
 
 		int numRegions = 7; // reset number of regions
+		// simulate ambulance placement 1
+		int[] ambulancePlacements = {1, 4, 2, 4, 1, 3, 5};
+		
+		System.out.println("Ambulance placement 1, with help from other region = false \n");
+		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
+		hospital.simulateOneRunAndReport();
+		
+		System.out.println("Ambulance placement 1, with help from other region = true \n");
+		Hospital hospital1 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, true, ambulancePlacements);
+		hospital1.simulateOneRunAndReport();
 		
 		// simulate ambulance placement 1
 		int[] ambulancePlacements1 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
-		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
-		hospital.simulateOneRunAndReport();
+		Hospital hospital2 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
+		hospital2.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
