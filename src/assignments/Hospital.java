@@ -292,6 +292,12 @@ public class Hospital {
 		
 		hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacementsOptimal);
 		hospitalOptimal.simulateOneRunAndReport();
+		
+		// Further optimization experiments
+		// Unfortunately, local search does not work
+		//int budget = 5000;
+		//LocalSearch ls = new LocalSearch(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, budget);
+		//ls.runLocalSearch();
     }
 
 	private void simulateOneRunAndReport() {
