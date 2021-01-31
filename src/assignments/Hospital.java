@@ -2,6 +2,8 @@ package assignments;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Random;
 
 import umontreal.ssj.rng.MRG32k3a;
@@ -34,8 +36,9 @@ public class Hospital {
 	double serviceRate; // at accidents
 	int[] ambulancePlacements; // ambulance placement strategy
 	double stopTime;
+	HashMap<String,State> outputs;
 	
-	public State[][][][][][][] outputs;
+	public State[][][][][][][] ooutputs;
 
 	// RNG for seeds
 	Random rng = new Random(); // for replication purposes you could set a seed
@@ -106,7 +109,6 @@ public class Hospital {
 		createAssignAmbulances(serveOutsideBaseRegion);
 		
 		createStates();
-
 		// create Tallies
 		waitTimeTally = new Tally("Waiting time");
 		serviceTimeTally = new Tally("Service time");
@@ -120,17 +122,43 @@ public class Hospital {
 	}
 
 	private void createStates() {
-		// TODO Auto-generated method stub
-		int n = numAmbulances + 1;
-		outputs = new State[n][n][n][n][n][n][n];
+		// Takes around two minutes due to the large size of parameter options
+		outputs = new HashMap<String,State>();
+		int n = numAmbulances + 1; // usually 21
+		
+		//ooutputs = new State[n][n][n][n][n][n][n];
+
 		for(int a = 0; a<n; a++)
-			for(int b = 0; a<n; a++)
+			for(int b = 0; b<n; b++)
 				for(int c = 0; c<n; c++)
 					for(int d = 0; d<n; d++)
 						for(int e = 0; e<n; e++)
 							for(int f = 0; f<n; f++)
 								for(int g = 0; g<n; g++)
-									;
+								{
+									int sum = a+b+c+d+e+f+g;
+									if(sum == numAmbulances) {
+										String key = computeKey(a,b,c,d,e,f,g);
+										State state = new State(a,b,c,d,e,f,g);
+										outputs.put(key, state);
+									}
+								}
+		
+
+		
+		
+	}
+
+	private String computeKey(int a, int b, int c, int d, int e, int f, int g) {
+		// TODO Auto-generated method stub
+		String result = "" + a;
+		result += b;
+		result += c;
+		result += d;
+		result += e;
+		result += f;
+		result += g;
+		return result;
 	}
 
 	private void setSeed() {
