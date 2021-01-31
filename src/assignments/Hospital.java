@@ -259,8 +259,8 @@ public class Hospital {
 		double serviceRate = 1.0;
 		double stopTime = 10000; // simulation endtime (minutes)
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
+		
 		/*
-
 		//	simulate ambulance placement 0: only central region
 		int numRegions = 1;
 		int[] ambulancePlacements = {20, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
@@ -269,28 +269,40 @@ public class Hospital {
 		*/
 
 		int numRegions = 7; // reset number of regions
+		// Try two simulations
 		
 		// simulate ambulance placement 1
-		int[] ambulancePlacements1 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
+		int[] ambulancePlacements1 = {1, 4, 2, 4, 1, 3, 5};
+		System.out.println("Ambulance placement 1, with help from other region = false \n");
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital.simulateOneRunAndReport();
+		
+		System.out.println("Ambulance placement 1, with help from other region = true \n");
+		serveOutsideBaseRegion = true;
+		Hospital hospital1 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
+		hospital1.simulateOneRunAndReport();
+		
+		// simulate ambulance placement 2
+		int[] ambulancePlacements2 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
+		System.out.println("Ambulance placement 2, with help from other region = false \n");
+		serveOutsideBaseRegion = false;
 
-		// further optimization experiments can be done here
-		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
-		int[] ambulancePlacements3 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
-		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
+		Hospital hospital2 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements2);
+		hospital2.simulateOneRunAndReport();
+		
+		System.out.println("Ambulance placement 2, with help from other region = true \n");
+		serveOutsideBaseRegion = true;
+		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, true, ambulancePlacements2);
 		hospital3.simulateOneRunAndReport();
 		
-		
-		System.out.println("OPTIMAL HOSPITAL, with help from other region = false \n");
-		
+		// simulate "optimal" found simulation
 		int[] ambulancePlacementsOptimal = {2, 3, 3, 3, 3, 3, 3};
-		Hospital hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacementsOptimal);
+		System.out.println("OPTIMAL HOSPITAL, with help from other region = false \n");
+		Hospital hospitalOptimal = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacementsOptimal);
 		hospitalOptimal.simulateOneRunAndReport();
 		
-		System.out.println("OPTIMAL HOSPITAL, with help from other region = true \n");
-		
-		hospitalOptimal = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacementsOptimal);
+		System.out.println("OPTIMAL HOSPITAL, with help from other region = true \n");	
+		hospitalOptimal = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, true, ambulancePlacementsOptimal);
 		hospitalOptimal.simulateOneRunAndReport();
 		
 		// Further optimization experiments
