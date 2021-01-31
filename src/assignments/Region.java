@@ -121,7 +121,7 @@ public class Region {
     private Ambulance getAmbulanceFromOtherRegions(Ambulance amb, Accident accident) {
 		// Get help from other regions
     	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
-    	double sdrivingtime = (amb == null) ? 1000.0 : amb.drivingTimeToAccident(accident); // keep track of current shortest driving time
+    	double sdrivingtime = (amb == null) ? 1000.0 : amb.drivingTimeToAccident(accident); // keep track of current shortest driving time, initialize with very large number
     	int besti = -1; // keep track of best index for ambulance from other region (with shortest driving time)
 
     	for (int i = 0; i < this.regions.length; i++) {
@@ -152,8 +152,6 @@ public class Region {
 	    	System.out.println(" Ambulance " + amb.id + " will handle this accident \n");
 		}
 		amb.startService(accident, arrivalTimeAtAccident);
-		
-//		wrapUpService(amb);
 	}
 
 	public void wrapUpService(Ambulance amb) {
