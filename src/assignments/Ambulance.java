@@ -37,14 +37,6 @@ public class Ambulance extends Event {
 		this.servesOutsideRegion = servesOutsideRegion;
 		this.drivingTimeHospitalToBase = drivingTimeHospitalToBase();
 	}
-	
-	private void updateTally(Accident accident) {
-		checkResponseTime();
-		
-		waitTimeTally.add(accident.getWaitTime());
-		serviceTimeTally.add(accident.getServiceTime());
-    	
-	}
 
     public void startService(Accident accident, double arrivalTimeAtAccident) {
     	if (Hospital.DEBUG_MODE) {System.out.println("Ambulance.startService method:");}
@@ -52,9 +44,9 @@ public class Ambulance extends Event {
     	currentAccident = accident;
         accident.serviceStarted(arrivalTimeAtAccident); 
     	// Ambulance has arrived at accident location, check the responsetime first!
-//    	checkResponseTime();
+    	checkResponseTime();
     	
-//    	waitTimeTally.add(this.currentAccident.getWaitTime());
+    	waitTimeTally.add(this.currentAccident.getWaitTime());
     	
         
         double processTimeAtScene = serviceTimeGen.nextDouble(); 
@@ -81,7 +73,7 @@ public class Ambulance extends Event {
 	        System.out.println("So completion will be handled at time : " + (Sim.time() + totalBusyTime));
         }
         
-//        serviceTimeTally.add(serviceTime);
+        serviceTimeTally.add(serviceTime);
         
         schedule(totalBusyTime); // niet vergeten Idle
     }
@@ -117,9 +109,8 @@ public class Ambulance extends Event {
 	    	System.out.println("Or: Acc. Arrival time + Response/driving time + Service time");
     	}
     	
-    	this.currentAccident.completed(currTime);
     	
-    	updateTally(this.currentAccident);
+    	this.currentAccident.completed(currTime);
     	
     	this.currentAccident = null;
     	if (Hospital.DEBUG_MODE) {System.out.println("SERVICE ACCIDENT COMPLETED \n");}
