@@ -275,12 +275,13 @@ public class Hospital {
 		Hospital hospital1 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, true, ambulancePlacements);
 		hospital1.simulateOneRunAndReport();
 		
-		// simulate ambulance placement 1
+		// simulate ambulance placement 2
+		System.out.println("Ambulance placement 2, with help from other region = false \n");
 		int[] ambulancePlacements1 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital2 = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital2.simulateOneRunAndReport();
 
-		// further optimization experiments can be done here
+		System.out.println("Ambulance placement 2, with help from other region = true \n");
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
 		int[] ambulancePlacements3 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital3 = new Hospital(numAmbulances, arrivalRates2, serviceRate, stopTime, numRegions, true, ambulancePlacements3);
