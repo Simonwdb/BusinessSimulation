@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import assignments.LocalSearch.State;
+import cern.colt.Arrays;
 import umontreal.ssj.rng.MRG32k3a;
 import umontreal.ssj.simevents.Sim;
 import umontreal.ssj.stat.TallyStore;
@@ -157,6 +158,8 @@ public class LocalSearch {
     public State selectOptimalState() {
         double maximum = -BIGM;
         State max = null;
+        // Needs to be changed to for all in HashMap, instead of outputs array
+        /*
         for (int i = 0; i < numStates; i++) {
             if (outputs[i].values.numberObs() > 0) {
                 if (outputs[i].values.average() > maximum) {
@@ -165,6 +168,7 @@ public class LocalSearch {
                 }
             }
         }
+        */
         return max;
     }
 
@@ -223,31 +227,15 @@ public class LocalSearch {
 	private List<String> getAllNeighbors(State state) {
 		// return all neighbors in the list, denote them by their unique index (used in outputs[])
 		List<String> result = new ArrayList<String>();
-		// abbreviate the k and K of this state
-		int x = state.aval; // k of this state
-		int y = state.yval; // K of this state
 		
-		// set correct lower and upper bounds for neighbors
-		// xmax/xmin/ymin/ymax checks are done to ensure correct "corner neighbors"
-		// e.g. xl is the lower bound for x neighbor, if x = xmin, xl is also equal to xmin instead of x-1, etc.
-		int xl = Math.max(x-1, xmin);
-		int xu = Math.min(x+1, xmax);
-		int yl = Math.max(y-1, ymin);
-		int yu = Math.min(y+1, ymax);
+		// set correct lower and upper bounds, 0 and 20
+
 		
 		// Add every neighbor in the "neighbourhood" (within xl,xu,yl,yu) to the list
-		for(int nx = xl; nx<=xu; nx++)
-			for(int ny = yl; ny<=yu; ny++) {
-				// do not include the current state as a "neighbor"!
-				boolean sameascurr = (nx == x) && (ny == y);
-				if(sameascurr) // if so, skip this iteration
-					continue;
-				
-				// if this is a correct neighbor, calculate its unique index
-				int ni = calcPos(nx, ny);
-				// and add it to the result array
-				result.add(ni);
-			}
+		// for every neighbor
+		// {
+		//		result.add(ni);
+		// }
 		return result;
 	}
 
@@ -290,10 +278,7 @@ public class LocalSearch {
     private void printLocalSearchResults(State opt) {
 		// Prints out the k and K of this "optimal" state
     	System.out.println("Local search results - best state found is:");
-        System.out.println("k =");
-        System.out.println(opt.aval);
-        System.out.println("K =");
-        System.out.println(opt.yval);
+        System.out.println(Arrays.toString(opt.toAmbPlacements()));
 		// and the average costs found for this choice of threshold settings
         System.out.println("Average costs per time unit (long-run):");
         System.out.println(opt.values.average());
