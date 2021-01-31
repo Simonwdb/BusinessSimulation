@@ -74,7 +74,7 @@ public class Ambulance extends Event {
         
         serviceTimeTally.add(serviceTime);
         
-        schedule(totalBusyTime); // niet vergeten Idle
+        schedule(totalBusyTime);
     }
 
 	private void checkResponseTime() {
