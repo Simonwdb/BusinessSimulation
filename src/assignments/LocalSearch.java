@@ -1,6 +1,8 @@
 package assignments;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import assignments.LocalSearch.State;
@@ -85,18 +87,6 @@ public class LocalSearch {
 		createStates();
 		rng.setSeed(0);
 	}
-
-	/* verplaatsen
-	// generate a random stream based on a random seed
-	public MRG32k3a getStream() {
-		long[] seed = new long[6];
-		for (int i =0;i<seed.length;i++) {
-			seed[i] = (long) rng.nextInt();
-		}
-		MRG32k3a myrng = new MRG32k3a();
-		myrng.setSeed(seed);
-		return myrng;
-	} */
 	
 	private void createStates() {
 		// Takes around two minutes due to the large size of parameter options
@@ -165,17 +155,17 @@ public class LocalSearch {
 	
     // Returns the optimal state after using a ranking algorithm based on the average costs
     public State selectOptimalState() {
-        double minimum = BIGM;
-        State min = null;
+        double maximum = -BIGM;
+        State max = null;
         for (int i = 0; i < numStates; i++) {
             if (outputs[i].values.numberObs() > 0) {
-                if (outputs[i].values.average() < minimum) {
-                    minimum = outputs[i].values.average();
-                    min = outputs[i];
+                if (outputs[i].values.average() > maximum) {
+                    maximum = outputs[i].values.average();
+                    max = outputs[i];
                 }
             }
         }
-        return min;
+        return max;
     }
 
     public State selectRandomStart() {
@@ -200,28 +190,39 @@ public class LocalSearch {
 	public State selectRandomNeighbor(State state) {
         State neighbor;    
         // get all neighbors (denoted by their unique indices corresponding to a certain k and K (or xval and yval))
-        List<Integer> ineighbors = getAllNeighbors(state);
+        List<String> ineighbors = getAllNeighbors(state);
         // select a random one from the list
-        int ri = pickRandom(ineighbors);
+        String ri = pickRandom(ineighbors);
         // return the correct state corresponding to this index
-        neighbor = outputs[ri];
+        neighbor = outputs.get(ri);
         return neighbor;
     }
     
-	private int pickRandom(List<Integer> list) {
-		// Pick a random number from this list
+	private String pickRandom(List<String> list) {
+		// Pick a random String from this list
 		int li = 0; 				 // always a lower bound index of this list
 		int ui = list.size() - 1;    // last possible index of this list
 		
 		MRG32k3a rand = getStream();
 		int ri = rand.nextInt(li, ui); // random index between li and ui
-		int relement = list.get(ri);   // retrieve the element at this index ri and return it
+		String relement = list.get(ri);   // retrieve the element at this index ri and return it
 		return relement;
 	}
+	
+	// generate a random stream based on a random seed
+	public MRG32k3a getStream() {
+		long[] seed = new long[6];
+		for (int i =0;i<seed.length;i++) {
+			seed[i] = (long) rng.nextInt();
+		}
+		MRG32k3a myrng = new MRG32k3a();
+		myrng.setSeed(seed);
+		return myrng;
+	} 
 
-	private List<Integer> getAllNeighbors(State state) {
+	private List<String> getAllNeighbors(State state) {
 		// return all neighbors in the list, denote them by their unique index (used in outputs[])
-		List<Integer> result = new ArrayList<Integer>();
+		List<String> result = new ArrayList<String>();
 		// abbreviate the k and K of this state
 		int x = state.aval; // k of this state
 		int y = state.yval; // K of this state
@@ -278,8 +279,8 @@ public class LocalSearch {
 		double rcurrent = current.values.average();
 		double rneighbor = neighbor.values.average();
 		
-		// If the sample average of the neighbor is better (which means: lower! as in lower costs), select neighbor
-		if(rneighbor <= rcurrent)
+		// If the sample average of the neighbor is better (which means: higher! as in higher target score), select neighbor
+		if(rneighbor >= rcurrent)
 			return neighbor;
 		// Otherwise, stay at current state
 		else
