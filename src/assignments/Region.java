@@ -25,10 +25,11 @@ public class Region {
 	int regionID;
 	Region[] regions;
 	int numRegions;
+	boolean serveOutsideBaseRegion;
 
 	RandomStream locationStream; // random number generator for locations
     
-	public Region(int id, double[] baseLocation, RandomStream arrivalRandomStream, double arrivalRate, RandomStream locationRandomStream, Region[] regionArray, int numRegions) {
+	public Region(int id, double[] baseLocation, RandomStream arrivalRandomStream, double arrivalRate, RandomStream locationRandomStream, Region[] regionArray, int numRegions, boolean serveOutsideBase) {
 
 		// set region variables
 		queue = new LinkedList<>();
@@ -37,11 +38,12 @@ public class Region {
 		regionID = id;
 		this.regions = regionArray;
 		this.numRegions = numRegions;
+		this.serveOutsideBaseRegion = serveOutsideBase;
 
 		// set random streams
 		arrivalProcess = new ArrivalProcess(arrivalRandomStream, arrivalRate);
 		locationStream = locationRandomStream;
-		//drawLocationsTest(); // test!
+		//drawLocationsTest(); // Test sampling procedure random in hexagon
 		
 	}
     
@@ -71,8 +73,6 @@ public class Region {
 
 	public void handleArrival() {
 
-		
-		// SB: trying with the assumption that there always will be a idle ambulance
 		// Get current accident
 		double currTime = Sim.time();
 		double[] location = drawLocation();
@@ -86,15 +86,14 @@ public class Region {
 			System.out.println(" [" + location[0] + ", " + location[1] +"] \n");
 		}
 		
-		// 27-01 addition
-		// SB: checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
-		// Allen idle ambulances vanuit de centrale kunnen helpen.
-		// By service complete pas vanaf de queue halen
+		// checking if there is a queue or not; if there is a queue the newly created accident needs to be added to the queue and one from the queue needs to be removed, to start the service
+		// Only idle ambulances from the centre can help
+		// Remove from the queue when service is complete
 		Ambulance amb = getAmbulanceAvailable(accident);
 		boolean noAmbAvailable = (amb == null);
 		if(noAmbAvailable) {
 			
-			if (Hospital.DEBUG_MODE) {System.out.println("Added to queue!!!");}
+			if (Hospital.DEBUG_MODE) {System.out.println("Added to queue.");}
 			this.queue.add(accident);	
 		}
 		else
@@ -103,37 +102,40 @@ public class Region {
 
 	private Ambulance getAmbulanceAvailable(Accident accident) {
 		// Check if there are ambulances available to process this accident, if yes retrieve it!
-		// TODO: als andere regios mogen helpen, moet deze methode dat ook regelen!
 		
 		// base case retrieve the ambulance from this.idleAmbulances (when ambulances can't help outside their region)
     	Ambulance result = this.idleAmbulances.pollFirst();
-    	if(result == null)
-    		return null;
-    	if(!result.servesOutsideRegion)
+    	if(result != null) // an ambulance from the base region is always quicker
     		return result;
-    	
-    	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
-    	double distance = (result == null) ? 1000.0 : result.drivingTimeToAccident(accident);
-
+    	if(!serveOutsideBaseRegion)
+    		return result;
     	// second case: if ambulances can help outside their regions
-    	for (int i = 0; i < this.regions.length; i++) {
-    		if (this.regions[i].idleAmbulances.size() > 0) {
-	    		if (this.regions[i].idleAmbulances.peekFirst().servesOutsideRegion) {
-	    			if (distance > this.regions[i].idleAmbulances.peekFirst().drivingTimeToAccident(accident)) {
-	    				result = this.regions[i].idleAmbulances.pollFirst();
-	    				distance = result.drivingTimeToAccident(accident);
-	    			}
-	    		}
-    		}
-    	}
+    	Ambulance amb = result;
+    	result = getAmbulanceFromOtherRegions(amb, accident);
+
     	return result;
-    	// NB! TODO: this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
+    	// NB! this ambulance is now no longer on the list of idle ambulances and needs to be kept track of!
 	}
 	
 
-    private void queueAccident(Accident accident) {
-		// Store the accident in the queue, so it can be helped later, when an ambulance is available
-    	this.queue.add(accident);
+    private Ambulance getAmbulanceFromOtherRegions(Ambulance amb, Accident accident) {
+		// Get help from other regions
+    	// SB: when result = null, it can't be used to make comparisons with other outside regions ambulances
+    	double sdrivingtime = (amb == null) ? 1000.0 : amb.drivingTimeToAccident(accident); // keep track of current shortest driving time
+    	int besti = -1; // keep track of best index for ambulance from other region (with shortest driving time)
+
+    	for (int i = 0; i < this.regions.length; i++) {
+    		if (this.regions[i].idleAmbulances.size() > 0) {
+    			Ambulance curr = this.regions[i].idleAmbulances.peekFirst();
+    			double currDrivingTime = curr.drivingTimeToAccident(accident);
+	    			if (currDrivingTime < sdrivingtime) {
+	    				sdrivingtime = currDrivingTime;
+	    				besti = i;
+	    		}
+    		}
+    	}
+    	Ambulance result = this.regions[besti].idleAmbulances.pollFirst();
+    	return result;
 	}
     
 	private void handleAccident(Ambulance amb, Accident accident) {

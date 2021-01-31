@@ -60,7 +60,7 @@ public class Hospital {
 		this.ambulancePlacements = ambulancePlacements;
 
 		// create regions
-		createRegions();
+		createRegions(serveOutsideBaseRegion);
 
 		// create and assign ambulances to regions
 		createAssignAmbulances(serveOutsideBaseRegion);
@@ -82,13 +82,14 @@ public class Hospital {
 		rng.setSeed(0);
 	}
 	
-    private void createRegions() {
+    private void createRegions(boolean serveOutsideBase) {
 		// Create the regions when constructing Hospital object
 		for (int j = 0; j < numRegions; j++) {
 			double[] baseLocation = determineRegionLocation(j);
 			RandomStream arrivalRandomStream = getStream();
 			RandomStream locationRandomStream = getStream();
-			regions[j] = new Region(j, baseLocation, arrivalRandomStream, arrivalRates[j], locationRandomStream, regions, numRegions);
+			regions[j] = new Region(j, baseLocation, arrivalRandomStream, arrivalRates[j], locationRandomStream, regions, numRegions, serveOutsideBase);
+			
 		}
 	}
     
@@ -106,7 +107,6 @@ public class Hospital {
 
 	// returns region index to which the ambulance should be assigned
     public int determineBaseRegion(int ambulanceNumber) {
-        // this function must be adjusted
 
         // use ambulancePlacements to return the right base region index for
         // the ambulance with ambulanceNumber
@@ -115,7 +115,7 @@ public class Hospital {
     			return i;
     		}
     	}
-    	return 0;
+    	return -1; // error
     }
 
     // returns the location coordinates of the base of region j
@@ -206,8 +206,14 @@ public class Hospital {
 		System.out.println("START SIMULATION");
 		Sim.start();
 		System.out.println("END SIMULATION");
-		// TODO: check: Wordt dit pas gedaan nadat de sim klaar is??
 		// combine results in the Hospital tallies : aparte methode van maken
+		combineResultsTallies();
+
+		return listStatsTallies;
+	}
+
+	private void combineResultsTallies() {
+		// Combine the results of the simulation in the tallies
 		for (int k = 0; k < numAmbulances; k++) {
 			for (double obs: ambulances[k].serviceTimeTally.getArray()) {
 				serviceTimeTally.add(obs);
@@ -219,8 +225,6 @@ public class Hospital {
 				withinTargetTally.add(obs);
 			}
 		}
-
-		return listStatsTallies;
 	}
 
 	// generate a random stream based on a random seed
@@ -252,9 +256,8 @@ public class Hospital {
 		boolean serveOutsideBaseRegion = false; // if true, ambulances serve outside their base regions, false otherwise
 		/*
 
-//		simulate ambulance placement 0: only central region
+		//	simulate ambulance placement 0: only central region
 		int numRegions = 1;
-//		miscchien aanpassen, 20 is vrij veel misschien
 		int[] ambulancePlacements = {20, 0, 0, 0, 0, 0, 0}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements);
 		hospital.simulateOneRunAndReport();
@@ -266,10 +269,6 @@ public class Hospital {
 		int[] ambulancePlacements1 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
 		Hospital hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements1);
 		hospital.simulateOneRunAndReport();
-		// simulate ambulance placement 2
-//		int[] ambulancePlacements2 = {1, 3, 3, 4, 1, 4, 4}; // should be of the length numRegions and with a total sum of numAmbulances
-//		hospital = new Hospital(numAmbulances, arrivalRates, serviceRate, stopTime, numRegions, serveOutsideBaseRegion, ambulancePlacements2);
-//		hospital.simulateOneRunAndReport();
 
 		// further optimization experiments can be done here
 		double[] arrivalRates2 = {1./15, 1./15, 1./15, 1./15, 1./15, 1./15, 1./15};
@@ -302,8 +301,6 @@ public class Hospital {
 		// below prints are just an example
 		System.out.println(stats.getName());
 		System.out.println(stats.report());
-		// Q for later: Is the result of simulateOneRun enough to print?
 		System.out.println();
-		
 	}
 }

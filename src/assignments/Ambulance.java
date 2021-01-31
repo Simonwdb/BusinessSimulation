@@ -50,7 +50,6 @@ public class Ambulance extends Event {
     	
         
         double processTimeAtScene = serviceTimeGen.nextDouble(); 
-        // should we notify that the accident person is now picked up?
         double drivingTime = this.drivingTimeToHospital(this.currentAccident);
         
         
@@ -100,7 +99,7 @@ public class Ambulance extends Event {
 	public void serviceCompleted() {
         // process the completed current accident: the ambulance brought the
         // patient to the hospital and is back at its base, what next?
-    	double currTime = Sim.time(); // dit klopt eindelijk!
+    	double currTime = Sim.time(); 
     	
     	if (Hospital.DEBUG_MODE) {
 	    	System.out.println("Service complete for Ambulance " + this.id);
@@ -141,7 +140,7 @@ public class Ambulance extends Event {
     public double drivingTimeToHospital(Accident acc) {
         // calculate the driving time from accident location to the hospital
     	double[] accidentBase = acc.getLocation();
-    	double[] hospitalBase = {0., 0.};	// SB: need to find a way to retrieve the location of the hospital 
+    	double[] hospitalBase = {0., 0.};
         
     	return euclideanDistance(accidentBase, hospitalBase);
     }
